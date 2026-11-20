@@ -420,7 +420,11 @@ Rămân pentru după: paginile de țară, comparațiile, ghidurile, `OverviewMap
 - Prețurile pe zi pentru Bansko (operatorul publică doar abonamentul de sezon).
 - Partener de transferuri (GetYourGuide nu s-a putut verifica automat).
 - Etichetele hărții de bază în alfabet latin pentru Bulgaria.
-- Numele afișat al site-ului (acum „East Peaks”, provizoriu).
+- Fotografii reale pentru eroi (acum randări din Copernicus DEM; se înlocuiesc doar fișierele din `public/heroes/`).
+- Newsletter: lipsește ID-ul formularului Kit.
+- Ghiduri: intrarea din meniu și grila de pe prima pagină apar când există articole.
+- Domeniul `eastpeaks.eu` și `tiles.eastpeaks.eu`, apoi `PUBLIC_INDEXING=true` la lansare.
+- Celelalte stațiuni din plan: amânate de Mike până după design.
 
 
 ### M1: Schelet (~8 h)
