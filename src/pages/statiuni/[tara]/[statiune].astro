@@ -1,0 +1,55 @@
+---
+// Resort page. M0 step C: map section; step D adds stats, prices, calculator, affiliate blocks.
+import { PUBLIC_PMTILES_URL } from 'astro:env/client';
+import ResortMap from '../../../components/map/ResortMap';
+import { countryByIso2 } from '../../../data/countries';
+import Base from '../../../layouts/Base.astro';
+import { GENERATED, type GeneratedResort } from '../../../lib/generated';
+import { formatKm } from '../../../lib/format';
+
+export function getStaticPaths() {
+  return GENERATED.flatMap((resort) => {
+    const country = countryByIso2(resort.country);
+    if (!country) {
+      console.warn(`[statiuni] unknown country ${resort.country} for ${resort.slug}, page skipped`);
+      return [];
+    }
+    return [{ params: { tara: country.slug, statiune: resort.slug }, props: { resort, countryName: country.name } }];
+  });
+}
+
+interface Props {
+  resort: GeneratedResort;
+  countryName: string;
+}
+
+const { resort, countryName } = Astro.props;
+---
+
+<Base
+  title={`${resort.name}: harta pârtiilor`}
+  description={`Harta interactivă a pârtiilor din ${resort.name} (${countryName}): ${formatKm(resort.runs.km_total)} de pârtie, ${resort.lifts.count} lifturi.`}
+>
+  <div class="mx-auto max-w-6xl px-4 py-8">
+    <p class="text-sm text-muted">
+      <a href="/statiuni/" class="text-muted">Stațiuni</a> · {countryName}
+    </p>
+    <h1 class="mt-1 text-3xl font-bold tracking-tight sm:text-4xl">{resort.name}</h1>
+
+    <section class="mt-6" aria-labelledby="harta-titlu">
+      <h2 id="harta-titlu" class="sr-only">Harta pârtiilor</h2>
+      <ResortMap
+        client:visible
+        name={resort.name}
+        slug={resort.slug}
+        bbox={resort.bbox}
+        preview={`/maps/${resort.slug}.webp`}
+        pmtilesUrl={PUBLIC_PMTILES_URL}
+      />
+      <p class="mt-2 text-xs text-muted">
+        Pârtii și lifturi: © contribuitorii OpenStreetMap, prin OpenSkiMap. Pante calculate din Copernicus DEM. Relief:
+        Mapterhorn. Detalii pe <a href="/despre/date/">Surse și atribuiri</a>.
+      </p>
+    </section>
+  </div>
+</Base>
