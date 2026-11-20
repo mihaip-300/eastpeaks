@@ -13,7 +13,7 @@ export default defineConfig({
   adapter: cloudflare({ imageService: 'compile' }),
   // No Astro.session usage: skip the auto-provisioned SESSION KV namespace.
   session: false,
-  integrations: [preact(), sitemap()],
+  integrations: [preact(), sitemap({ filter: (page) => !page.includes('/design/') })],
   env: {
     schema: {
       // Versioned PMTiles on R2 (npm run tiles:upload). Public, so the default lives here;

@@ -77,7 +77,8 @@ pipeline/             resorts.yaml, src/, tests/, Makefile
 - **Prețurile nu opresc build-ul.** Dacă `npm run prices` nu poate citi Google Sheet-ul (lipsește `PRICES_SHEET_CSV_URL`, rețea, CSV invalid), păstrează `data/prices.json` existent și scrie un avertisment.
 - **Datele lipsă nu opresc build-ul.** O pagină fără date editoriale afișează „în curând” și scrie un avertisment în log.
 - **Fără bază de date pentru conținut.** D1 se folosește doar pentru click-urile de afiliere.
-- **JavaScript doar în insule.** Nu adăuga React, Next.js, Mapbox, Google Maps, GA4 sau jQuery.
+- **JavaScript doar în insule.** Nu adăuga React, Next.js, Mapbox, Google Maps, GA4 sau jQuery. Excepție: cele două scripturi inline mici din `Base.astro` (starea headerului la scroll și reveal-ul la scroll), fără framework.
+- **Designul** urmează `DESIGN.md` (tokenuri în `src/styles/tokens.css`, ghid viu pe `/design/`). Doar culorile din tokenuri; aur pe închis, `gold-deep` pe ivoire; roșul doar pentru acțiune și live.
 - **Afilierea trece doar prin `AffiliateLink`** → `/go/{partner}/{target}/?from={slug}` (cu slash final, altfel `trailingSlash: 'always'` adaugă un 301), cu `rel="sponsored nofollow noopener"`. Niciun URL de afiliere direct în conținut. `/go/` acceptă doar combinații partener/țintă din `src/data/partners.ts`, ca să nu devină open redirect. Parametrul `from` se acceptă doar dacă e un slug cunoscut (altfel se ignoră).
 - **Atribuirile rămân vizibile** pe hartă și pe `/despre/date`: OSM/ODbL, OpenFreeMap, Copernicus DEM (cu textul exact din HANDOFF 5.4), ESA WorldCover, sursa de relief. Datele de pârtii derivate din OSM se oferă sub ODbL (HANDOFF 5.4).
 - **Fără date personale în D1:** nu salva IP-uri.
@@ -91,10 +92,10 @@ pipeline/             resorts.yaml, src/, tests/, Makefile
 | `piste:difficulty` (OSM) | Etichetă | Culoare |
 | --- | --- | --- |
 | `novice` | Foarte ușoară | `#2e9e44` verde |
-| `easy` | Ușoară | `#1e6fd9` albastru |
-| `intermediate` | Medie | `#d62b2b` roșu |
-| `advanced` | Dificilă | `#1a1a1a` negru |
-| `expert` | Foarte dificilă | `#1a1a1a` negru, linie mai groasă |
+| `easy` | Ușoară | `#2a6fdb` albastru |
+| `intermediate` | Medie | `#d63a3a` roșu |
+| `advanced` | Dificilă | `#111111` negru |
+| `expert` | Foarte dificilă | `#111111` negru, linie mai groasă |
 | `freeride` | Freeride | `#f08c00` portocaliu, punctat |
 | lipsă | Nemarcată | `#8a8a8a` gri |
 | lifturi (`aerialway`) | — | `#1a1a1a`, 1,5 px, puncte la stații |

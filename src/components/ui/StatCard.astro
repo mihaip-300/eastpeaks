@@ -1,0 +1,22 @@
+---
+// Big number, small label, always a unit (DESIGN.md: "every number has a label and a unit").
+interface Props {
+  label: string;
+  value: string;
+  unit?: string;
+  note?: string;
+  tone?: 'light' | 'dark';
+}
+
+const { label, value, unit, note, tone = 'light' } = Astro.props;
+const dark = tone === 'dark';
+---
+
+<div class:list={['rounded-lg p-6 sm:p-7', dark ? 'bg-midnight text-ivory' : 'border border-stone bg-ivory']}>
+  <p class:list={['label', dark ? 'text-gold' : 'text-gold-deep']}>{label}</p>
+  <p class="tabular mt-4 flex items-baseline gap-2">
+    <span class:list={['font-display text-stat', dark ? 'text-gold' : 'text-midnight']}>{value}</span>
+    {unit && <span class:list={['text-sm font-medium', dark ? 'text-mist' : 'text-slate']}>{unit}</span>}
+  </p>
+  {note && <p class:list={['mt-2 text-sm', dark ? 'text-mist' : 'text-slate']}>{note}</p>}
+</div>

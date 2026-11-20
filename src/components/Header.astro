@@ -1,0 +1,204 @@
+---
+// Global header (DESIGN.md): transparent over a dark hero, solid ivory with a
+// hairline once the page scrolls (state set by the inline script in Base.astro).
+import { NAV, UTILITY_LINKS } from '../data/site';
+
+interface Props {
+  /** The page opens with a dark full-bleed hero under the header. */
+  overHero?: boolean;
+}
+
+const { overHero = false } = Astro.props;
+const path = Astro.url.pathname;
+const isActive = (href: string) => path === href || (href !== '/' && path.startsWith(href));
+---
+
+<header class="site-header fixed inset-x-0 top-0 z-40" data-over-hero={overHero ? '' : undefined}>
+  <!-- Utility bar: ski utilities one click away -->
+  <div class="utility hidden border-b sm:block">
+    <div class="container-site flex h-9 items-center justify-between">
+      <p class="label">Sezonul 2026/27</p>
+      <nav aria-label="Utile">
+        <ul class="flex items-center gap-6">
+          {
+            UTILITY_LINKS.map((l) => (
+              <li>
+                <a href={l.href} class="label no-underline opacity-80 transition-opacity hover:opacity-100">
+                  {l.label}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </nav>
+    </div>
+  </div>
+
+  <div class="bar border-b">
+    <div class="container-site flex h-16 items-center justify-between gap-6 sm:h-20">
+      <a href="/" class="relative block h-7 w-[168px] shrink-0 sm:h-8 sm:w-[198px]" aria-label="EastPeaks, pagina principală">
+        <img src="/logo-reversed.svg" alt="" width="198" height="32" class="logo-dark absolute inset-0 h-full w-auto" />
+        <img src="/logo-light.svg" alt="" width="198" height="32" class="logo-light absolute inset-0 h-full w-auto" />
+      </a>
+
+      <nav aria-label="Navigare principală" class="hidden md:block">
+        <ul class="flex items-center gap-9">
+          {
+            NAV.map((item) => (
+              <li>
+                <a
+                  href={item.href}
+                  class:list={['nav-link text-[0.9375rem] font-medium no-underline', isActive(item.href) && 'is-active']}
+                  aria-current={isActive(item.href) ? 'page' : undefined}
+                >
+                  {item.label}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </nav>
+
+      <div class="flex items-center gap-3">
+        <a href="/calculator-cost-schi/" class="btn btn-primary hidden !px-5 !py-2.5 lg:inline-flex">Calculează costul</a>
+        <!-- Mobile menu without JavaScript -->
+        <details class="menu relative md:hidden">
+          <summary class="flex h-10 w-10 cursor-pointer list-none items-center justify-center rounded-sm" aria-label="Meniu">
+            <span class="menu-icon" aria-hidden="true"></span>
+          </summary>
+          <div class="fixed inset-x-0 top-16 bottom-0 overflow-y-auto bg-black px-5 pt-8 pb-12 text-ivory">
+            <ul class="space-y-1">
+              {
+                NAV.map((item) => (
+                  <li>
+                    <a href={item.href} class="block border-b border-gold/20 py-4 font-display text-3xl no-underline">
+                      {item.label}
+                    </a>
+                  </li>
+                ))
+              }
+            </ul>
+            <p class="label mt-10 text-gold">Utile</p>
+            <ul class="mt-3 flex flex-wrap gap-x-6 gap-y-3">
+              {
+                UTILITY_LINKS.map((l) => (
+                  <li>
+                    <a href={l.href} class="text-mist no-underline">
+                      {l.label}
+                    </a>
+                  </li>
+                ))
+              }
+            </ul>
+            <a href="/calculator-cost-schi/" class="btn btn-primary mt-10 w-full">Calculează costul</a>
+          </div>
+        </details>
+      </div>
+    </div>
+  </div>
+</header>
+
+<style>
+  .site-header {
+    --fg: var(--color-midnight);
+    color: var(--fg);
+    transition:
+      background-color 400ms var(--ease-out-soft),
+      color 400ms var(--ease-out-soft);
+  }
+  .site-header .bar,
+  .site-header .utility {
+    background: var(--color-ivory);
+    border-color: var(--color-stone);
+    transition:
+      background-color 400ms var(--ease-out-soft),
+      border-color 400ms var(--ease-out-soft);
+  }
+  .site-header .utility .label {
+    color: var(--color-gold-deep);
+  }
+  .logo-dark {
+    opacity: 0;
+  }
+  .logo-light {
+    opacity: 1;
+  }
+  .logo-dark,
+  .logo-light {
+    transition: opacity 400ms var(--ease-out-soft);
+  }
+
+  /* Over a dark hero, before scrolling: transparent, ivory text, reversed logo */
+  .site-header[data-over-hero]:not(.is-solid) {
+    --fg: var(--color-ivory);
+  }
+  .site-header[data-over-hero]:not(.is-solid) .bar,
+  .site-header[data-over-hero]:not(.is-solid) .utility {
+    background: transparent;
+    border-color: color-mix(in oklab, var(--color-gold) 25%, transparent);
+  }
+  .site-header[data-over-hero]:not(.is-solid) .utility .label {
+    color: var(--color-gold);
+  }
+  .site-header[data-over-hero]:not(.is-solid) .logo-dark {
+    opacity: 1;
+  }
+  .site-header[data-over-hero]:not(.is-solid) .logo-light {
+    opacity: 0;
+  }
+
+  .nav-link {
+    position: relative;
+    padding-block: 0.25rem;
+  }
+  .nav-link::after {
+    content: '';
+    position: absolute;
+    inset: auto 0 -2px 0;
+    height: 1px;
+    background: var(--color-gold);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 350ms var(--ease-out-soft);
+  }
+  .nav-link:hover::after,
+  .nav-link.is-active::after {
+    transform: scaleX(1);
+  }
+
+  .menu-icon,
+  .menu-icon::before,
+  .menu-icon::after {
+    display: block;
+    width: 22px;
+    height: 1.5px;
+    background: currentColor;
+    transition: transform 300ms var(--ease-out-soft);
+  }
+  .menu-icon {
+    position: relative;
+  }
+  .menu-icon::before,
+  .menu-icon::after {
+    content: '';
+    position: absolute;
+  }
+  .menu-icon::before {
+    top: -7px;
+  }
+  .menu-icon::after {
+    top: 7px;
+  }
+  .menu[open] .menu-icon {
+    background: transparent;
+  }
+  .menu[open] .menu-icon::before {
+    transform: translateY(7px) rotate(45deg);
+  }
+  .menu[open] .menu-icon::after {
+    transform: translateY(-7px) rotate(-45deg);
+  }
+  .menu summary::-webkit-details-marker {
+    display: none;
+  }
+</style>

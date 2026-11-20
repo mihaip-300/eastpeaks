@@ -1,0 +1,23 @@
+---
+interface Props {
+  tags: string[];
+  tone?: 'light' | 'dark';
+}
+
+const { tags, tone = 'light' } = Astro.props;
+---
+
+<ul class="flex flex-wrap gap-2" aria-label="Caracter">
+  {
+    tags.map((t) => (
+      <li
+        class:list={[
+          'rounded-full border px-3.5 py-1.5 text-sm',
+          tone === 'dark' ? 'border-gold/40 text-ivory' : 'border-gold-deep/30 text-midnight',
+        ]}
+      >
+        {t}
+      </li>
+    ))
+  }
+</ul>

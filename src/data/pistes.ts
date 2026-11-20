@@ -1,10 +1,10 @@
 // Piste difficulty classes, Romanian labels and European colours (CLAUDE.md).
 export const DIFFICULTIES = [
   { key: 'novice', label: 'Foarte ușoară', color: '#2e9e44' },
-  { key: 'easy', label: 'Ușoară', color: '#1e6fd9' },
-  { key: 'intermediate', label: 'Medie', color: '#d62b2b' },
-  { key: 'advanced', label: 'Dificilă', color: '#1a1a1a' },
-  { key: 'expert', label: 'Foarte dificilă', color: '#1a1a1a' },
+  { key: 'easy', label: 'Ușoară', color: '#2a6fdb' },
+  { key: 'intermediate', label: 'Medie', color: '#d63a3a' },
+  { key: 'advanced', label: 'Dificilă', color: '#111111' },
+  { key: 'expert', label: 'Foarte dificilă', color: '#111111' },
   { key: 'freeride', label: 'Freeride', color: '#f08c00' },
   { key: 'unknown', label: 'Nemarcată', color: '#8a8a8a' },
 ] as const;

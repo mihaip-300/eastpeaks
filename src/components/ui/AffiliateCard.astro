@@ -1,0 +1,32 @@
+---
+// Editorial affiliate card: understated, no badges; links only through /go/.
+import AffiliateLink from '../affiliate/AffiliateLink.astro';
+
+interface Props {
+  kicker: string;
+  title: string;
+  text: string;
+  links: { partner: string; target: string; label: string }[];
+  from: string;
+}
+
+const { kicker, title, text, links, from } = Astro.props;
+---
+
+<article class="flex flex-col border-t border-gold-deep/40 pt-6">
+  <p class="label text-gold-deep">{kicker}</p>
+  <h3 class="mt-3 text-h3">{title}</h3>
+  <p class="mt-3 flex-1 text-slate">{text}</p>
+  <ul class="mt-5 flex flex-wrap gap-x-6 gap-y-2">
+    {
+      links.map((l) => (
+        <li>
+          <AffiliateLink partner={l.partner} target={l.target} from={from} class="link-quiet text-midnight">
+            {l.label} <span aria-hidden="true">→</span>
+          </AffiliateLink>
+        </li>
+      ))
+    }
+  </ul>
+  <p class="mt-4 text-xs text-slate">Link de afiliere</p>
+</article>

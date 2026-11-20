@@ -1,58 +1,143 @@
+@import "@fontsource-variable/playfair-display/wght.css";
+@import "@fontsource-variable/inter/wght.css";
 @import "tailwindcss";
-
-@theme {
-  --font-sans: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-
-  /* Working brand palette (neutral until Mike picks a brand colour). */
-  --color-ink: #13212e;
-  --color-muted: #5a6875;
-  --color-line: #dfe5ea;
-  --color-snow: #f6f8fa;
-  --color-brand: #123047;
-  --color-brand-soft: #e3edf5;
-  --color-accent: #1e6fd9;
-
-  /* European piste colours, see CLAUDE.md. */
-  --color-piste-novice: #2e9e44;
-  --color-piste-easy: #1e6fd9;
-  --color-piste-intermediate: #d62b2b;
-  --color-piste-advanced: #1a1a1a;
-  --color-piste-expert: #1a1a1a;
-  --color-piste-freeride: #f08c00;
-  --color-piste-unknown: #8a8a8a;
-}
+@import "./tokens.css";
 
 @layer base {
   html {
     -webkit-text-size-adjust: 100%;
+    scroll-behavior: smooth;
+    scroll-padding-top: 7rem;
   }
   body {
-    @apply bg-white text-ink antialiased;
+    @apply bg-ivory font-sans text-body text-midnight antialiased;
+    font-feature-settings: "cv11", "ss01";
+  }
+  h1,
+  h2,
+  h3 {
+    @apply font-display font-normal text-balance;
   }
   a {
-    @apply text-accent underline-offset-2 hover:underline;
+    @apply text-current underline decoration-gold/60 decoration-1 underline-offset-4 transition-colors hover:decoration-current;
+  }
+  :focus-visible {
+    @apply outline-2 outline-offset-2 outline-gold;
+  }
+  ::selection {
+    @apply bg-gold/40 text-midnight;
+  }
+  .tabular {
+    font-variant-numeric: tabular-nums lining-nums;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *,
+    *::before,
+    *::after {
+      animation-duration: 1ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 1ms !important;
+    }
   }
 }
 
-/* Long-form text pages (legal, about, sources) without a typography plugin. */
 @layer components {
-  .prose-ro {
-    @apply max-w-prose leading-relaxed;
+  /* Layout */
+  .container-site {
+    @apply mx-auto w-full max-w-site px-5 sm:px-8;
   }
-  .prose-ro h1 {
-    @apply mb-4 text-3xl font-bold tracking-tight;
+  .section {
+    @apply py-16 sm:py-24 lg:py-32;
   }
-  .prose-ro h2 {
-    @apply mt-8 mb-3 text-xl font-semibold;
+
+  /* Small uppercase label; gold on dark, gold-deep on ivory */
+  .label {
+    @apply text-label font-medium uppercase;
+    letter-spacing: 0.12em;
   }
-  .prose-ro p,
-  .prose-ro ul {
-    @apply mb-4;
+  .on-dark .label,
+  .label-gold {
+    @apply text-gold;
   }
-  .prose-ro ul {
-    @apply list-disc pl-6;
+  .label-deep {
+    @apply text-gold-deep;
   }
-  .prose-ro li {
-    @apply mb-1;
+
+  /* 1px hairlines */
+  .hairline {
+    @apply border-stone;
+  }
+  .on-dark .hairline,
+  .hairline-gold {
+    @apply border-gold/30;
+  }
+
+  /* Buttons (use together: class="btn btn-primary"): alpine-red primary, solid midnight,
+     light, and outline with a gold hairline */
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-sm px-6 py-3.5 text-sm font-medium tracking-wide no-underline transition-colors duration-300;
+  }
+  .btn-primary {
+    @apply bg-alpine-red text-ivory hover:bg-alpine-red-dark;
+  }
+  .btn-dark {
+    @apply bg-midnight text-ivory hover:bg-black;
+  }
+  .btn-light {
+    @apply bg-ivory text-midnight hover:bg-white;
+  }
+  .btn-outline {
+    @apply border border-gold/50 text-current hover:border-gold;
+  }
+  .link-quiet {
+    @apply inline-flex items-center gap-2 text-sm font-medium no-underline;
+    background: linear-gradient(currentColor, currentColor) 0 100% / 0 1px no-repeat;
+    transition: background-size 300ms var(--ease-out-soft);
+  }
+  .link-quiet:hover {
+    background-size: 100% 1px;
+    background-image: linear-gradient(var(--color-gold), var(--color-gold));
+  }
+
+  /* Frosted glass, only over imagery and the map */
+  .glass {
+    @apply bg-black/45 backdrop-blur-md;
+  }
+
+  /* Editorial long-form text */
+  .prose-ed {
+    @apply max-w-text text-body;
+  }
+  .prose-ed h1 {
+    @apply mb-6 text-h1;
+  }
+  .prose-ed h2 {
+    @apply mt-12 mb-4 text-h3;
+  }
+  .prose-ed p,
+  .prose-ed ul {
+    @apply mb-5;
+  }
+  .prose-ed ul {
+    @apply list-disc pl-6 marker:text-gold;
+  }
+  .prose-ed li {
+    @apply mb-1.5;
+  }
+
+  /* Scroll reveal (see Base.astro); visible by default without JS */
+  .js [data-reveal] {
+    opacity: 0;
+    transform: translateY(14px);
+    transition:
+      opacity 700ms var(--ease-out-soft),
+      transform 700ms var(--ease-out-soft);
+  }
+  .js [data-reveal].is-visible {
+    opacity: 1;
+    transform: none;
   }
 }

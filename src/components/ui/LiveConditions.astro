@@ -1,0 +1,129 @@
+---
+// Live conditions (Zermatt-style). Shows real data only; with no data source it
+// renders a calm "în curând" card that links to the resort's official report.
+// The demo variant (style guide only) is visibly labelled.
+import StatusList, { type StatusItem } from './StatusList.astro';
+
+export interface LiveData {
+  updated: string; // HH:MM
+  liftsOpen: number;
+  liftsTotal: number;
+  kmOpen: number;
+  kmTotal: number;
+  snowBaseCm: number;
+  snowTopCm: number;
+  tempValleyC: number;
+  tempTopC: number;
+  lifts: StatusItem[];
+}
+
+interface Props {
+  resortName: string;
+  data?: LiveData | null;
+  officialUrl?: string;
+  demo?: boolean;
+}
+
+const { resortName, data = null, officialUrl, demo = false } = Astro.props;
+const cell = 'rounded-lg bg-midnight p-5 sm:p-6';
+const num = (n: number) => n.toLocaleString('ro-RO', { maximumFractionDigits: 1 });
+const temp = (c: number) => `${c > 0 ? '+' : c < 0 ? '−' : ''}${Math.abs(c)}°`;
+---
+
+<div class="on-dark rounded-lg bg-black p-5 text-ivory sm:p-8">
+  <div class="flex flex-wrap items-center justify-between gap-3">
+    <p class="label">Condiții live · {resortName}</p>
+    {
+      data ? (
+        <p class="flex flex-wrap items-center gap-x-3 gap-y-2 text-sm text-mist">
+          <span class="inline-flex items-center gap-2 whitespace-nowrap">
+            <span class="live-dot" aria-hidden="true" />
+            Actualizat la <span class="tabular text-ivory">{data.updated}</span>
+          </span>
+          {demo && <span class=" rounded-sm border border-alpine-red/70 px-2 py-0.5 text-[0.6875rem] font-semibold tracking-wider text-ivory uppercase">Date demonstrative</span>}
+        </p>
+      ) : null
+    }
+  </div>
+
+  {
+    data ? (
+      <>
+        <div class="mt-6 grid grid-cols-2 gap-3 lg:grid-cols-4">
+          <div class={cell}>
+            <p class="label">Instalații</p>
+            <p class="tabular mt-3 font-display text-[2.5rem] leading-none text-gold">
+              {data.liftsOpen}<span class="text-xl text-mist">/{data.liftsTotal}</span>
+            </p>
+            <p class="mt-1 text-sm text-mist">deschise</p>
+          </div>
+          <div class={cell}>
+            <p class="label">Pârtii</p>
+            <p class="tabular mt-3 font-display text-[2.5rem] leading-none text-gold">
+              {num(data.kmOpen)}<span class="text-xl text-mist"> km</span>
+            </p>
+            <p class="mt-1 text-sm text-mist">din {num(data.kmTotal)} km</p>
+          </div>
+          <div class={cell}>
+            <p class="label">Zăpadă</p>
+            <p class="tabular mt-3 font-display text-[2.5rem] leading-none text-gold">
+              {data.snowTopCm}<span class="text-xl text-mist"> cm</span>
+            </p>
+            <p class="mt-1 text-sm text-mist">sus · {data.snowBaseCm} cm jos</p>
+          </div>
+          <div class={cell}>
+            <p class="label">Temperatură</p>
+            <p class="tabular mt-3 font-display text-[2.5rem] leading-none text-gold">{temp(data.tempTopC)}</p>
+            <p class="mt-1 text-sm text-mist">vârf · {temp(data.tempValleyC)} vale</p>
+          </div>
+        </div>
+        <div class="mt-6">
+          <StatusList items={data.lifts} tone="dark" />
+        </div>
+      </>
+    ) : (
+      <div class="mt-5 grid gap-6 md:grid-cols-[1fr_auto] md:items-end">
+        <div>
+          <p class="font-display text-h3">Condițiile live apar în curând.</p>
+          <p class="mt-3 max-w-xl text-mist">
+            Lucrăm la date de încredere despre zăpadă și instalații. Până atunci, starea zilei e pe site-ul oficial al
+            stațiunii.
+          </p>
+        </div>
+        {officialUrl && (
+          <a href={officialUrl} rel="noopener" target="_blank" class="btn btn-outline text-ivory">
+            Raportul oficial <span aria-hidden="true">↗</span>
+          </a>
+        )}
+      </div>
+    )
+  }
+</div>
+
+<style>
+  .live-dot {
+    position: relative;
+    width: 8px;
+    height: 8px;
+    border-radius: 999px;
+    background: var(--color-alpine-red);
+  }
+  .live-dot::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: inherit;
+    animation: pulse 2s var(--ease-out-soft) infinite;
+  }
+  @keyframes pulse {
+    from {
+      transform: scale(1);
+      opacity: 0.7;
+    }
+    to {
+      transform: scale(3);
+      opacity: 0;
+    }
+  }
+</style>

@@ -2,7 +2,7 @@
 #   npm run pipeline -- make all
 PY := python -m
 
-.PHONY: all download process tiles previews qa test
+.PHONY: all download process tiles previews qa test brand
 
 all: download process tiles previews qa
 
@@ -23,3 +23,6 @@ qa:         ## out/qa_report.md
 
 test:
 	pytest -q
+
+brand:      ## public/logo*.svg, symbol, favicons (Playfair outlines)
+	$(PY) src.brand

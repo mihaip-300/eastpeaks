@@ -1,0 +1,17 @@
+{
+  "_comment": "DATE DEMONSTRATIVE: valori inventate, folosite doar pe pagina /design/. Nu apar pe paginile stațiunilor.",
+  "updated": "08:30",
+  "liftsOpen": 7,
+  "liftsTotal": 10,
+  "kmOpen": 16.4,
+  "kmTotal": 19.5,
+  "snowBaseCm": 45,
+  "snowTopCm": 110,
+  "tempValleyC": -2,
+  "tempTopC": -8,
+  "lifts": [
+    { "name": "Telegondola Postăvarul (exemplu)", "state": "open", "detail": "08:30–16:00" },
+    { "name": "Telecabina Kanzel (exemplu)", "state": "partial", "detail": "doar urcare" },
+    { "name": "Teleschi Ruia (exemplu)", "state": "closed", "detail": "vânt" }
+  ]
+}

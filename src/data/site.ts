@@ -1,13 +1,24 @@
-// Display name is a working title until Mike confirms it (HANDOFF section 10).
 export const SITE = {
-  name: 'East Peaks',
+  name: 'EastPeaks',
   tagline: 'Stațiuni de schi din România, Balcani și Austria, comparate pe date',
   locale: 'ro-RO',
 } as const;
 
+// Pages that don't exist yet (Ghid) stay out of the navigation until they do.
 export const NAV = [
   { href: '/statiuni/', label: 'Stațiuni' },
-  { href: '/despre/', label: 'Despre' },
+  { href: '/harta/', label: 'Hartă' },
+  { href: '/conditii/', label: 'Condiții' },
+  { href: '/calculator-cost-schi/', label: 'Planifică' },
+] as const;
+
+// Ski utilities, always one click away (utility bar). Live values appear only with real data.
+export const UTILITY_LINKS = [
+  { href: '/conditii/#zapada', label: 'Zăpadă' },
+  { href: '/conditii/#instalatii', label: 'Instalații' },
+  { href: '/conditii/#vreme', label: 'Vreme' },
+  { href: '/conditii/#webcam', label: 'Webcam' },
+  { href: '/harta/', label: 'Hartă' },
 ] as const;
 
 export const FOOTER_LINKS = [

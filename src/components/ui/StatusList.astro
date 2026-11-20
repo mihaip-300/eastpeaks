@@ -1,0 +1,31 @@
+---
+// Zermatt-style status rows: dot + name + state + updated time.
+export interface StatusItem {
+  name: string;
+  state: 'open' | 'partial' | 'closed';
+  detail?: string;
+}
+
+interface Props {
+  items: StatusItem[];
+  tone?: 'light' | 'dark';
+}
+
+const { items, tone = 'light' } = Astro.props;
+const LABEL = { open: 'Deschis', partial: 'Parțial', closed: 'Închis' } as const;
+const DOT = { open: 'bg-open', partial: 'bg-partial', closed: 'bg-closed' } as const;
+const dark = tone === 'dark';
+---
+
+<ul class:list={['divide-y', dark ? 'divide-gold/20' : 'divide-stone']}>
+  {
+    items.map((i) => (
+      <li class="flex items-center gap-4 py-3.5">
+        <span class:list={['h-2 w-2 shrink-0 rounded-full', DOT[i.state]]} aria-hidden="true" />
+        <span class="flex-1">{i.name}</span>
+        {i.detail && <span class:list={['tabular text-sm', dark ? 'text-mist' : 'text-slate']}>{i.detail}</span>}
+        <span class:list={['w-16 text-right text-sm', dark ? 'text-ivory' : 'text-midnight']}>{LABEL[i.state]}</span>
+      </li>
+    ))
+  }
+</ul>

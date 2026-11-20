@@ -1,0 +1,190 @@
+---
+// Living style guide (DESIGN.md). Not linked from the site, noindex, not in the sitemap.
+import Tabs from '../components/ui/Tabs';
+import AffiliateCard from '../components/ui/AffiliateCard.astro';
+import Faq from '../components/ui/Faq.astro';
+import LiveConditions from '../components/ui/LiveConditions.astro';
+import StatCard from '../components/ui/StatCard.astro';
+import StatusList from '../components/ui/StatusList.astro';
+import TagChips from '../components/ui/TagChips.astro';
+import demo from '../data/demo-conditions.json';
+import { DIFFICULTIES } from '../data/pistes';
+import Base from '../layouts/Base.astro';
+
+const colors = [
+  { name: 'black', hex: '#0A0A0A', use: 'Suprafața închisă: footer, secțiuni închise, overlay pe hero', dark: true },
+  { name: 'midnight', hex: '#0B1320', use: 'Carduri și panouri pe negru; text principal pe ivoire', dark: true },
+  { name: 'gold', hex: '#C6A667', use: 'Logo, linii fine, cifre și etichete pe fundal închis', dark: false },
+  { name: 'gold-deep', hex: '#7E6230', use: 'Etichete aurii pe ivoire (AA 5,0:1)', dark: true },
+  { name: 'ivory', hex: '#F4EFE6', use: 'Fundalul principal deschis', dark: false },
+  { name: 'stone', hex: '#E4DDD0', use: 'Carduri și separatoare pe ivoire', dark: false },
+  { name: 'slate', hex: '#5B6472', use: 'Text secundar pe ivoire', dark: true },
+  { name: 'mist', hex: '#9AA3B0', use: 'Text secundar pe fundal închis', dark: false },
+  { name: 'alpine-red', hex: '#A3262A', use: 'Doar acțiuni și live: CTA, tab activ (max ~5%)', dark: true },
+];
+const type = [
+  { token: 'text-hero', sample: 'Doi munți.', cls: 'font-display text-hero' },
+  { token: 'text-h1', sample: 'Poiana Brașov', cls: 'font-display text-h1' },
+  { token: 'text-h2', sample: 'Cele mai abrupte pârtii', cls: 'font-display text-h2' },
+  { token: 'text-h3', sample: 'Cum ajungi la Bansko', cls: 'font-display text-h3' },
+  { token: 'text-lead', sample: 'Pârtii lungi, zăpadă sigură și un oraș vechi cu taverne: ușor de iubit într-o săptămână.', cls: 'text-lead' },
+  { token: 'text-body', sample: 'Șase zile de schi, nopți în oraș și drumul înapoi prin Ruse. Diacriticele corecte: ă â î ș ț Ă Â Î Ș Ț.', cls: 'text-body' },
+  { token: 'label', sample: 'Altitudine maximă', cls: 'label text-gold-deep' },
+];
+const lifts = demo.lifts as { name: string; state: 'open' | 'partial' | 'closed'; detail?: string }[];
+---
+
+<Base title="Design system" description="Tokenuri, tipografie și componente EastPeaks." noindex>
+  <div class="container-site py-14 sm:py-20">
+    <p class="label text-gold-deep">EastPeaks · ghid de stil</p>
+    <h1 class="mt-4 text-h1">Design system</h1>
+    <p class="mt-5 max-w-text text-lead text-slate">
+      Alpine editorial: reținere, tipografie mare, etichete mici. Aurul e pentru brand, roșul doar pentru acțiune și live.
+    </p>
+
+    <!-- Logo -->
+    <section class="mt-20" aria-labelledby="logo">
+      <h2 id="logo" class="text-h3">Logo</h2>
+      <div class="mt-6 grid gap-3 md:grid-cols-3">
+        <div class="flex h-48 items-center justify-center rounded-lg bg-black p-8"><img src="/logo.svg" alt="Logo auriu" class="h-12 w-auto" /></div>
+        <div class="flex h-48 items-center justify-center rounded-lg bg-midnight p-8"><img src="/logo-reversed.svg" alt="Logo invers" class="h-12 w-auto" /></div>
+        <div class="flex h-48 items-center justify-center rounded-lg border border-stone p-8"><img src="/logo-light.svg" alt="Logo pe ivoire" class="h-12 w-auto" /></div>
+      </div>
+      <div class="mt-3 flex items-center gap-4">
+        <img src="/symbol.svg" alt="Simbol" class="h-20 w-20" />
+        <img src="/symbol.svg" alt="" class="h-10 w-10" />
+        <img src="/favicon-32.png" alt="" class="h-8 w-8" />
+        <img src="/favicon-16.png" alt="" class="h-4 w-4" />
+      </div>
+    </section>
+
+    <!-- Colour -->
+    <section class="mt-20" aria-labelledby="culori">
+      <h2 id="culori" class="text-h3">Culori</h2>
+      <div class="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
+        {
+          colors.map((c) => (
+            <div class="overflow-hidden rounded-lg border border-stone">
+              <div class:list={['flex h-24 items-end p-3', c.dark ? 'text-ivory' : 'text-midnight']} style={{ background: c.hex }}>
+                <span class="tabular text-xs font-medium">{c.hex}</span>
+              </div>
+              <div class="p-3">
+                <p class="text-sm font-semibold">{c.name}</p>
+                <p class="mt-1 text-xs text-slate">{c.use}</p>
+              </div>
+            </div>
+          ))
+        }
+      </div>
+      <div class="mt-6 flex flex-wrap gap-x-6 gap-y-2 text-sm">
+        {DIFFICULTIES.map((d) => <span class="inline-flex items-center gap-2"><span class="h-1 w-6 rounded-full" style={{ background: d.color }} />{d.label}</span>)}
+      </div>
+    </section>
+
+    <!-- Type -->
+    <section class="mt-20" aria-labelledby="tipografie">
+      <h2 id="tipografie" class="text-h3">Tipografie</h2>
+      <p class="mt-2 text-slate">Playfair Display (titluri) · Inter (text și interfață) · cifre tabulare</p>
+      <div class="mt-6 divide-y divide-stone border-y border-stone">
+        {
+          type.map((t) => (
+            <div class="grid gap-2 py-6 md:grid-cols-[10rem_1fr] md:items-baseline">
+              <code class="text-xs text-slate">{t.token}</code>
+              <p class={t.cls}>{t.sample}</p>
+            </div>
+          ))
+        }
+        <div class="grid gap-2 py-6 md:grid-cols-[10rem_1fr] md:items-baseline">
+          <code class="text-xs text-slate">nume bulgare</code>
+          <p class="font-display text-h3">Shiligarnik · <span lang="bg">Шилигарник</span> · Todorka · <span lang="bg">Тодорка</span></p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Buttons -->
+    <section class="mt-20" aria-labelledby="butoane">
+      <h2 id="butoane" class="text-h3">Butoane și linkuri</h2>
+      <div class="mt-6 flex flex-wrap items-center gap-4">
+        <a href="#butoane" class="btn btn-primary">Calculează costul</a>
+        <a href="#butoane" class="btn btn-dark">Explorează Bansko</a>
+        <a href="#butoane" class="btn btn-outline">Raportul oficial</a>
+        <a href="#butoane" class="link-quiet">Vezi toate pârtiile <span aria-hidden="true">→</span></a>
+      </div>
+      <div class="on-dark mt-4 flex flex-wrap items-center gap-4 rounded-lg bg-black p-6 text-ivory">
+        <a href="#butoane" class="btn btn-primary">Calculează costul</a>
+        <a href="#butoane" class="btn btn-light">Explorează Bansko</a>
+        <a href="#butoane" class="btn btn-outline">Raportul oficial</a>
+        <a href="#butoane" class="link-quiet">Vezi toate pârtiile <span aria-hidden="true">→</span></a>
+      </div>
+    </section>
+
+    <!-- Stats -->
+    <section class="mt-20" aria-labelledby="cifre">
+      <h2 id="cifre" class="text-h3">Cifre</h2>
+      <div class="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+        <StatCard label="Pârtii" value="19,5" unit="km" note="38 de pârtii în OpenStreetMap" />
+        <StatCard label="Altitudine maximă" value="1.786" unit="m" note="972 m la bază" />
+        <StatCard label="Lifturi" value="8" unit="instalații" tone="dark" />
+        <StatCard label="Skipass adult" value="45" unit="€ / zi" note="240 lei" tone="dark" />
+      </div>
+    </section>
+
+    <!-- Live -->
+    <section class="mt-20" aria-labelledby="live">
+      <h2 id="live" class="text-h3">Condiții live</h2>
+      <p class="mt-2 text-slate">Pe paginile stațiunilor apare varianta „în curând” până avem o sursă reală de date.</p>
+      <div class="mt-6 space-y-4">
+        <LiveConditions resortName="Poiana Brașov" officialUrl="https://www.brasovcity.ro/vino-la-ski/" />
+        <LiveConditions resortName="Poiana Brașov" data={{ ...demo, lifts }} demo />
+      </div>
+    </section>
+
+    <!-- Status, tags -->
+    <section class="mt-20 grid gap-10 lg:grid-cols-2" aria-labelledby="stari">
+      <div>
+        <h2 id="stari" class="text-h3">Listă de stare</h2>
+        <div class="mt-4"><StatusList items={lifts} /></div>
+      </div>
+      <div>
+        <h2 class="text-h3">Etichete</h2>
+        <div class="mt-6"><TagChips tags={['Familii', 'Începători', 'Freeride', 'Après-ski', 'Ski de noapte']} /></div>
+      </div>
+    </section>
+
+    <!-- Tabs -->
+    <section class="mt-20" aria-labelledby="taburi">
+      <h2 id="taburi" class="text-h3">Taburi</h2>
+      <div class="mt-6">
+        <Tabs client:visible label="Secțiuni stațiune" tabs={[{ id: 'prezentare', label: 'Prezentare' }, { id: 'partii', label: 'Pârtii' }, { id: 'cazare', label: 'Cazare' }, { id: 'faq', label: 'FAQ' }]}>
+          <p slot="prezentare" class="max-w-text">Panoul de prezentare: text editorial scurt, etichete de caracter și galerie.</p>
+          <p slot="partii" class="max-w-text">Panoul pârtiilor: kilometri pe dificultate și cele mai abrupte pârtii.</p>
+          <p slot="cazare" class="max-w-text">Panoul de cazare: carduri editoriale de afiliere.</p>
+          <p slot="faq" class="max-w-text">Întrebări frecvente.</p>
+        </Tabs>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="mt-20" aria-labelledby="faq">
+      <h2 id="faq" class="text-h3">Întrebări frecvente</h2>
+      <div class="mt-6">
+        <Faq
+          items={[
+            { q: 'Când se deschide sezonul?', a: 'De obicei la jumătatea lui decembrie, în funcție de zăpadă. Data exactă o anunță stațiunea.' },
+            { q: 'Pot închiria echipament la fața locului?', a: 'Da, în stațiune sunt mai multe centre de închiriere. Rezervarea online e de obicei mai ieftină.' },
+          ]}
+        />
+      </div>
+    </section>
+
+    <!-- Affiliate -->
+    <section class="mt-20" aria-labelledby="afiliere">
+      <h2 id="afiliere" class="text-h3">Carduri de afiliere</h2>
+      <div class="mt-6 grid gap-10 md:grid-cols-3">
+        <AffiliateCard kicker="Cazare" title="Unde dormi în Bansko" text="Hoteluri lângă gondolă sau în orașul vechi, la zece minute de mers." from="bansko" links={[{ partner: 'booking', target: 'bansko', label: 'Vezi cazări pe Booking' }]} />
+        <AffiliateCard kicker="Echipament" title="Închiriază din timp" text="Schiuri și clăpari rezervați online, ridicați la magazinul din stațiune." from="bansko" links={[{ partner: 'skiset', target: 'bansko', label: 'Skiset' }, { partner: 'snowrental', target: 'bansko', label: 'Snowrental' }]} />
+        <AffiliateCard kicker="Mașină" title="De la aeroport" text="Dacă zbori la Sofia sau Plovdiv, compară ofertele de închiriere." from="bansko" links={[{ partner: 'car', target: 'sof', label: 'Sofia' }, { partner: 'car', target: 'pdv', label: 'Plovdiv' }]} />
+      </div>
+    </section>
+  </div>
+</Base>

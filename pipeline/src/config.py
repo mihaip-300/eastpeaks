@@ -40,13 +40,13 @@ MERGE_TOLERANCE_M = 15.0
 
 DIFFICULTIES = ("novice", "easy", "intermediate", "advanced", "expert", "freeride", "unknown")
 
-# European piste colours, keep in sync with CLAUDE.md and src/styles/global.css.
+# European piste colours, keep in sync with CLAUDE.md, DESIGN.md and src/styles/tokens.css.
 PISTE_COLORS = {
     "novice": "#2e9e44",
-    "easy": "#1e6fd9",
-    "intermediate": "#d62b2b",
-    "advanced": "#1a1a1a",
-    "expert": "#1a1a1a",
+    "easy": "#2a6fdb",
+    "intermediate": "#d63a3a",
+    "advanced": "#111111",
+    "expert": "#111111",
     "freeride": "#f08c00",
     "unknown": "#8a8a8a",
 }

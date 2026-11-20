@@ -6,3 +6,5 @@ pillow==13.0.0
 pyyaml==6.0.3
 requests==2.34.2
 pytest==9.2.0
+fonttools==4.68.0
+brotli==1.2.1
