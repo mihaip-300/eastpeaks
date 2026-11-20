@@ -1,0 +1,19 @@
+# Resorts processed by the pipeline.
+#
+# OpenSkiMap feature ids are content hashes that change whenever a feature
+# changes, so resorts are matched on the ski area's upstream source ids
+# ("<type>:<id>", as listed in the ski area's `sources`). Several sources per
+# resort are allowed (resorts made of several OSM ski areas).
+
+resorts:
+  - slug: poiana-brasov
+    name: Poiana Brașov
+    country: RO
+    skiarea_sources:
+      - openstreetmap:way/884881279
+
+  - slug: bansko
+    name: Bansko
+    country: BG
+    skiarea_sources:
+      - openstreetmap:relation/6938879

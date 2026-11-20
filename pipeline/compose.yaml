@@ -1,0 +1,13 @@
+# Mounts the repo at /work so the pipeline can write data/generated/ and public/maps/.
+# Raw downloads and DEM tiles live in a named volume, not in the (cloud-synced) project folder.
+services:
+  pipeline:
+    build: .
+    image: eastpeaks-pipeline:latest
+    working_dir: /work/pipeline
+    volumes:
+      - ..:/work
+      - pipeline-cache:/work/pipeline/cache
+
+volumes:
+  pipeline-cache:

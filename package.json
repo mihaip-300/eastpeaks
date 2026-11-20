@@ -11,7 +11,9 @@
     "check": "wrangler types && astro check && tsc --noEmit",
     "preview": "npm run build && wrangler dev",
     "deploy": "npm run build && wrangler deploy",
-    "types": "wrangler types"
+    "types": "wrangler types",
+    "pipeline": "docker compose -f pipeline/compose.yaml run --rm pipeline",
+    "tiles:upload": "node scripts/upload-tiles.mjs"
   },
   "dependencies": {
     "@astrojs/cloudflare": "^14.4.9",

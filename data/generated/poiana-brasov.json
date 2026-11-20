@@ -1,0 +1,106 @@
+{
+  "slug": "poiana-brasov",
+  "skiarea_sources": [
+    "openstreetmap:way/884881279"
+  ],
+  "openskimap_ids": [
+    "e057dafbfd136ff8ff80097cc7fa1d9000c46d2a"
+  ],
+  "name": "Poiana Brașov",
+  "country": "RO",
+  "center": [
+    25.55508,
+    45.58031
+  ],
+  "bbox": [
+    25.54381,
+    45.56639,
+    25.56636,
+    45.59423
+  ],
+  "elevation_m": {
+    "min": 972,
+    "max": 1786
+  },
+  "runs": {
+    "count": 38,
+    "km_total": 19.5,
+    "km_by_difficulty": {
+      "novice": 0.0,
+      "easy": 7.1,
+      "intermediate": 4.2,
+      "advanced": 6.9,
+      "expert": 0.0,
+      "freeride": 0.0,
+      "unknown": 1.3
+    }
+  },
+  "lifts": {
+    "count": 8,
+    "by_type": {
+      "cable_car": 2,
+      "chair_lift": 2,
+      "gondola": 1,
+      "platter": 3
+    }
+  },
+  "steepest_runs": [
+    {
+      "id": "6ab89df06122aa3b3c4ec2cb163ede225800b6ff",
+      "name": "Kanzel",
+      "name_local": null,
+      "difficulty": "advanced",
+      "length_m": 258,
+      "drop_m": 100,
+      "avg_gradient_pct": 38.9,
+      "max_gradient_100m_pct": 53.4
+    },
+    {
+      "id": "29af1b41319a1bcd5dce3f8213e167b75f553242",
+      "name": null,
+      "name_local": null,
+      "difficulty": "advanced",
+      "length_m": 361,
+      "drop_m": 134,
+      "avg_gradient_pct": 37.1,
+      "max_gradient_100m_pct": 51.2
+    },
+    {
+      "id": "d37a151ff9d05e034d713e66c8e9dc074c3dd253",
+      "name": "Lupului",
+      "name_local": null,
+      "difficulty": "advanced",
+      "length_m": 2843,
+      "drop_m": 709,
+      "avg_gradient_pct": 24.9,
+      "max_gradient_100m_pct": 50.4
+    },
+    {
+      "id": "bd42d9d2365730f90e3430e0a7f79df45754f6f2",
+      "name": "Subteleferic",
+      "name_local": null,
+      "difficulty": "advanced",
+      "length_m": 729,
+      "drop_m": 199,
+      "avg_gradient_pct": 27.2,
+      "max_gradient_100m_pct": 49.9
+    },
+    {
+      "id": "bcd062f8dc1c58bd9ad235df448b47e266c06ce4",
+      "name": "Subteleferic",
+      "name_local": null,
+      "difficulty": "advanced",
+      "length_m": 1411,
+      "drop_m": 427,
+      "avg_gradient_pct": 30.3,
+      "max_gradient_100m_pct": 49.0
+    }
+  ],
+  "forest_share": null,
+  "generated_at": "2026-11-20T09:00:26Z",
+  "sources": {
+    "openskimap_date": "2026-11-19T01:00:00.000Z",
+    "openskimap_build": "2026-11-20T01:41:30.992Z",
+    "dem": "Copernicus GLO-30"
+  }
+}

@@ -32,17 +32,18 @@ npm run preview    # build servit local prin wrangler
 npm run deploy     # build + wrangler deploy
 npm run prices     # Google Sheet (CSV) → data/prices.json
 
-cd pipeline
-make download      # OpenSkiMap pentru BBOX-ul regiunii
-make process       # curățare, statistici, JSON pe stațiune
-make tiles         # PMTiles cu tippecanoe
-make previews      # imagini statice ale hărților (public/maps/)
-make qa            # raport de calitate (pipeline/out/qa_report.md)
-make upload        # urcă PMTiles pe R2
-pytest
+# Pipeline, în Docker (prima rulare construiește imaginea)
+npm run pipeline -- make all        # download + process + tiles + previews + qa
+npm run pipeline -- make download   # OpenSkiMap (max. o dată pe zi) + extrasul pentru resorts.yaml
+npm run pipeline -- make process    # curățare, pante, data/generated/, out/tiles/
+npm run pipeline -- make tiles      # PMTiles cu tippecanoe → pipeline/out/pistes-YYYYMMDD.pmtiles
+npm run pipeline -- make previews   # public/maps/{slug}.webp
+npm run pipeline -- make qa         # pipeline/out/qa_report.md (ERROR = blocant)
+npm run pipeline -- make test       # pytest
+npm run tiles:upload                # urcă ultimul PMTiles pe R2 (din Windows, cu tokenul din .env)
 ```
 
-Scripturile se creează în M1 și M2. Ține lista de mai sus la zi când le schimbi.
+Ține lista de mai sus la zi când schimbi scripturile. Datele brute și tile-urile DEM stau în volumul Docker `pipeline-cache`, nu în folderul proiectului.
 
 **Mediul local e Windows.** Comenzile `npm` merg în PowerShell. Pipeline-ul (Python 3.12, GDAL, tippecanoe, `make`) rulează **în Docker**, din imaginea definită în `pipeline/Dockerfile`, pentru că tippecanoe nu rulează nativ pe Windows. Docker Desktop trebuie să fie pornit. Nu scrie scripturi de pipeline care depind de PowerShell.
 

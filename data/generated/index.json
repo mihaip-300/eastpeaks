@@ -1,0 +1,37 @@
+{
+  "generated_at": "2026-11-20T09:00:26Z",
+  "resorts": [
+    {
+      "slug": "bansko",
+      "name": "Bansko",
+      "country": "BG",
+      "center": [
+        23.44564,
+        41.79242
+      ],
+      "elevation_m": {
+        "min": 993,
+        "max": 2523
+      },
+      "km_total": 34.2,
+      "runs_count": 38,
+      "lifts_count": 19
+    },
+    {
+      "slug": "poiana-brasov",
+      "name": "Poiana Brașov",
+      "country": "RO",
+      "center": [
+        25.55508,
+        45.58031
+      ],
+      "elevation_m": {
+        "min": 972,
+        "max": 1786
+      },
+      "km_total": 19.5,
+      "runs_count": 38,
+      "lifts_count": 8
+    }
+  ]
+}

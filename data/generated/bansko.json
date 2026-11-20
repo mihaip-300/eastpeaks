@@ -1,0 +1,108 @@
+{
+  "slug": "bansko",
+  "skiarea_sources": [
+    "openstreetmap:relation/6938879"
+  ],
+  "openskimap_ids": [
+    "bdd08a03378f40f323db3efc27d51bafea12c040"
+  ],
+  "name": "Bansko",
+  "country": "BG",
+  "center": [
+    23.44564,
+    41.79242
+  ],
+  "bbox": [
+    23.41401,
+    41.75783,
+    23.47727,
+    41.82702
+  ],
+  "elevation_m": {
+    "min": 993,
+    "max": 2523
+  },
+  "runs": {
+    "count": 38,
+    "km_total": 34.2,
+    "km_by_difficulty": {
+      "novice": 3.5,
+      "easy": 15.0,
+      "intermediate": 8.3,
+      "advanced": 3.3,
+      "expert": 0.0,
+      "freeride": 0.0,
+      "unknown": 4.0
+    }
+  },
+  "lifts": {
+    "count": 19,
+    "by_type": {
+      "chair_lift": 8,
+      "drag_lift": 3,
+      "gondola": 2,
+      "magic_carpet": 1,
+      "platter": 1,
+      "rope_tow": 4
+    }
+  },
+  "steepest_runs": [
+    {
+      "id": "0423ad03a16e4522871d940db9ffed2ab49eb102",
+      "name": "Alberto Tomba",
+      "name_local": "Алберто Томба",
+      "difficulty": "advanced",
+      "length_m": 2546,
+      "drop_m": 377,
+      "avg_gradient_pct": 14.8,
+      "max_gradient_100m_pct": 54.2
+    },
+    {
+      "id": "e898ef6b136ef2d2d11667ba7aa24fb37caf477c",
+      "name": "Chalin valog 1",
+      "name_local": "Чалин валог 1",
+      "difficulty": "advanced",
+      "length_m": 591,
+      "drop_m": 228,
+      "avg_gradient_pct": 38.5,
+      "max_gradient_100m_pct": 53.4
+    },
+    {
+      "id": "b0db64a260d5126e66d3ce339959c90e61adc9ad",
+      "name": "Chalin valog 2",
+      "name_local": "Чалин валог 2",
+      "difficulty": "advanced",
+      "length_m": 212,
+      "drop_m": 99,
+      "avg_gradient_pct": 46.8,
+      "max_gradient_100m_pct": 51.0
+    },
+    {
+      "id": "604eb286e60d72089096d36237fd8593a6845980",
+      "name": "Shiligarnik 1",
+      "name_local": "Шилигарник 1",
+      "difficulty": "intermediate",
+      "length_m": 932,
+      "drop_m": 360,
+      "avg_gradient_pct": 38.6,
+      "max_gradient_100m_pct": 45.8
+    },
+    {
+      "id": "1138e3bb8eca40829471117018d962909549cc5a",
+      "name": "Shiligarnik 1",
+      "name_local": "Шилигарник 1",
+      "difficulty": "intermediate",
+      "length_m": 367,
+      "drop_m": 123,
+      "avg_gradient_pct": 33.4,
+      "max_gradient_100m_pct": 44.9
+    }
+  ],
+  "forest_share": null,
+  "generated_at": "2026-11-20T09:00:26Z",
+  "sources": {
+    "openskimap_date": "2026-11-19T01:00:00.000Z",
+    "openskimap_build": "2026-11-20T01:41:30.992Z",
+    "dem": "Copernicus GLO-30"
+  }
+}

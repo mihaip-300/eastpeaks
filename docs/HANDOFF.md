@@ -121,7 +121,8 @@ O stațiune are trei surse, unite în `src/lib/resorts.ts`. Câmpurile lipsă nu
 ```json
 {
   "slug": "poiana-brasov",
-  "openskimap_ids": ["<id>"],
+  "skiarea_sources": ["openstreetmap:way/884881279"],
+  "openskimap_ids": ["<id din build-ul curent, informativ>"],
   "name": "Poiana Brașov",
   "country": "RO",
   "center": [25.55, 45.59],
@@ -196,7 +197,7 @@ Propunere inițială (35), editabilă:
 - **Muntenegru (2):** Kolašin, Žabljak (Savin Kuk)
 - **Austria (8):** Schladming (Planai), Zell am See–Kaprun, Saalbach Hinterglemm, Bad Gastein, Sölden, Ischgl, Obertauern, Mayrhofen
 
-Fiecare intrare: `slug`, `name`, `country`, `openskimap_ids` (listă, completată după prima descărcare, prin potrivire de nume + coordonate, apoi verificată manual). E listă pentru că unele stațiuni sunt mai multe ski areas în OSM: Zell am See–Kaprun (Schmittenhöhe + Kitzsteinhorn), Saalbach Hinterglemm (Skicircus), Schladming (4-Berge).
+Fiecare intrare: `slug`, `name`, `country`, `skiarea_sources` (listă de ID-uri sursă ale ski area-ului, de forma `openstreetmap:way/884881279` sau `openstreetmap:relation/6938879`, găsite în `sources` din `ski_areas.geojson` și verificate manual). ID-urile proprii OpenSkiMap sunt hash-uri de conținut și se schimbă la fiecare modificare, deci nu se folosesc drept cheie. E listă pentru că unele stațiuni sunt mai multe ski areas în OSM: Zell am See–Kaprun (Schmittenhöhe + Kitzsteinhorn), Saalbach Hinterglemm (Skicircus), Schladming (4-Berge).
 
 Înainte de M2, confirmă că fiecare stațiune funcționează în sezonul 2026/27 (de exemplu, Vitosha a avut sezoane cu lifturile majoritar închise).
 
