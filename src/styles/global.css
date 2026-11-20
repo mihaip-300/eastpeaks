@@ -55,7 +55,7 @@
 
   /* Small uppercase label; gold on dark, gold-deep on ivory */
   .label {
-    @apply text-label font-medium uppercase;
+    @apply font-sans text-label font-medium uppercase;
     letter-spacing: 0.12em;
   }
   .on-dark .label,

@@ -1,63 +1,223 @@
 ---
-import { getCollection } from 'astro:content';
-import ResortCard from '../components/resort/ResortCard.astro';
+import HeroImage from '../components/ui/HeroImage.astro';
+import SectionHeading from '../components/ui/SectionHeading.astro';
 import { SITE } from '../data/site';
 import Base from '../layouts/Base.astro';
-import { getResorts } from '../lib/resorts';
+import { formatEur, formatInt, formatKm } from '../lib/format';
+import { getResorts, type Resort } from '../lib/resorts';
+import { seasonLabel } from '../lib/season';
 
 const resorts = await getResorts();
-const pairs = (await getCollection('comparatii'))
-  .map(({ data }) => ({ a: resorts.find((r) => r.slug === data.a), b: resorts.find((r) => r.slug === data.b) }))
-  .filter((p) => p.a && p.b);
+const [a, b] = resorts; // two resorts in phase 1 (sorted: Bansko, Poiana Brașov)
+// Left: Poiana Brașov (closest to Romanian readers), right: Bansko.
+const left = resorts.find((r) => r.slug === 'poiana-brasov') ?? a!;
+const right = resorts.find((r) => r.slug === 'bansko') ?? b ?? a!;
+
+const stats = (r: Resort) => [
+  { label: 'Altitudine', value: formatInt(r.generated.elevation_m.max), unit: 'm' },
+  { label: 'Pârtii', value: formatKm(r.generated.runs.km_total).replace(' km', ''), unit: 'km' },
+  {
+    label: 'Skipass, 1 zi',
+    value: r.priceEur?.adult_1d != null ? formatEur(r.priceEur.adult_1d).replace(/\s?€/, '') : '—',
+    unit: r.priceEur?.adult_1d != null ? '€' : 'în curând',
+  },
+];
+
+type Row = { label: string; get: (r: Resort) => string };
+const compare: Row[] = [
+  { label: 'Țară', get: (r) => r.country.name },
+  { label: 'Kilometri de pârtie', get: (r) => formatKm(r.generated.runs.km_total) },
+  { label: 'Altitudine', get: (r) => `${formatInt(r.generated.elevation_m.min)}–${formatInt(r.generated.elevation_m.max)} m` },
+  { label: 'Lifturi', get: (r) => formatInt(r.generated.lifts.count) },
+  { label: 'Din București', get: (r) => (r.editorial?.drive.bucuresti ? `${formatInt(r.editorial.drive.bucuresti.km)} km` : '—') },
+  { label: 'Skipass adult, 1 zi', get: (r) => (r.priceEur?.adult_1d != null ? `≈ ${formatEur(r.priceEur.adult_1d)}` : 'în curând') },
+];
 ---
 
 <Base
   title={SITE.name}
-  description="Hărți ale pârtiilor, prețuri la skipass, distanțe cu mașina și un calculator de cost pentru stațiunile de schi din România, Balcani și Austria."
+  overHero
+  description="Poiana Brașov și Bansko comparate pe date: hărți interactive ale pârtiilor, pante, prețuri la skipass, drumul din România și un calculator de cost."
+  ogImage="/heroes/bansko-1600.webp"
 >
-  <section class="bg-brand text-white">
-    <div class="mx-auto max-w-6xl px-4 py-14 sm:py-20">
-      <h1 class="max-w-3xl text-3xl font-bold tracking-tight text-balance sm:text-5xl">Unde mergi la schi iarna asta?</h1>
-      <p class="mt-4 max-w-2xl text-lg text-brand-soft">
-        Comparăm stațiunile din România, Balcani și Austria pe date: kilometri de pârtie, pante, prețul skipass-ului și
-        cât faci cu mașina din București, Cluj sau Brașov.
-      </p>
-      <a
-        href="/statiuni/"
-        class="mt-8 inline-block rounded-lg bg-white px-5 py-3 font-semibold text-brand no-underline hover:bg-brand-soft hover:no-underline"
-      >
-        Vezi stațiunile
-      </a>
+  <!-- Hero: two mountains, split on a diagonal -->
+  <section class="on-dark relative isolate flex min-h-[100svh] items-end overflow-hidden bg-black text-ivory" aria-labelledby="hero-title">
+    <div class="hero-art absolute inset-0 -z-10">
+      <HeroImage slug={left.slug} alt="" eager class="absolute inset-0 h-full w-full" />
+      <div class="split absolute inset-0">
+        <HeroImage slug={right.slug} alt="" eager class="absolute inset-0 h-full w-full" />
+      </div>
+      <svg class="absolute inset-0 h-full w-full" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+        <line x1="62" y1="0" x2="44" y2="100" stroke="var(--color-gold)" stroke-opacity="0.55" stroke-width="0.12" vector-effect="non-scaling-stroke" />
+      </svg>
+      <div class="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-black/20"></div>
+      <div class="absolute inset-0 hidden bg-gradient-to-r from-black/70 via-black/25 to-transparent lg:block"></div>
+    </div>
+
+    <div class="container-site pb-14 sm:pb-20">
+      <p class="label animate-fade-up">{left.name} · {right.name}</p>
+      <h1 id="hero-title" class="mt-5 max-w-5xl text-hero animate-fade-up [animation-delay:120ms]">Doi munți. Un sezon întreg.</h1>
+      <dl class="mt-10 grid max-w-3xl gap-6 border-t border-gold/30 pt-6 sm:grid-cols-2 animate-fade-up [animation-delay:240ms]">
+        {
+          [left, right].map((r) => (
+            <div>
+              <dt class="label">{r.name}</dt>
+              <dd class="tabular mt-2 text-lg text-ivory">{seasonLabel(r.editorial?.season)}</dd>
+            </div>
+          ))
+        }
+      </dl>
+      <div class="mt-10 flex flex-wrap gap-3 animate-fade-up [animation-delay:360ms]">
+        <a href="#statiuni" class="btn btn-light">Explorează stațiunile</a>
+        <a href="/calculator-cost-schi/" class="btn btn-primary">Calculează costul</a>
+      </div>
+      <p class="mt-12 text-xs text-mist/80">Imagini: relieful real al celor două stațiuni, randat din Copernicus DEM.</p>
     </div>
   </section>
 
-  <section class="mx-auto max-w-6xl px-4 py-12">
-    <h2 class="text-2xl font-semibold tracking-tight">Stațiuni</h2>
-    <ul class="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-      {
-        resorts.map((r) => (
-          <li>
-            <ResortCard resort={r} />
-          </li>
-        ))
-      }
-    </ul>
+  <!-- Resort chooser -->
+  <section id="statiuni" class="section" aria-labelledby="alege">
+    <div class="container-site">
+      <SectionHeading kicker="Alege muntele" title="Două stațiuni, două caractere." id="alege">
+        Poiana Brașov e la două ore și jumătate de București, cu pârtii scurte și abrupte deasupra unui oraș medieval.
+        Bansko e o săptămână întreagă de schi în Pirin, cu gondola care pleacă din oraș.
+      </SectionHeading>
 
-    {
-      pairs.length > 0 && (
-        <>
-          <h2 class="mt-12 text-2xl font-semibold tracking-tight">Comparații</h2>
-          <ul class="mt-4 space-y-2">
-            {pairs.map(({ a, b }) => (
-              <li>
-                <a href={`/compara/${a!.slug}-vs-${b!.slug}/`}>
-                  {a!.name} sau {b!.name}?
-                </a>
-              </li>
-            ))}
-          </ul>
-        </>
-      )
-    }
+      <div class="mt-14 grid gap-6 lg:grid-cols-2">
+        {
+          [left, right].map((r, i) => (
+            <a href={r.url} class="group on-dark relative block overflow-hidden rounded-lg bg-black text-ivory no-underline" data-reveal style={`transition-delay:${i * 120}ms`}>
+              <div class="aspect-[4/5] sm:aspect-[16/11]">
+                <HeroImage slug={r.slug} alt={`Relieful din jurul stațiunii ${r.name}`} sizes="(min-width: 1024px) 50vw, 100vw" class="h-full w-full transition-transform duration-[1200ms] ease-out group-hover:scale-[1.03]" />
+              </div>
+              <div class="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent" />
+              <div class="absolute inset-x-0 bottom-0 p-6 sm:p-9">
+                <p class="label">{r.editorial?.region ? `${r.editorial.region} · ` : ''}{r.country.name}</p>
+                <h3 class="mt-3 font-display text-h1">{r.name}</h3>
+                <dl class="mt-7 grid grid-cols-3 gap-4 border-t border-gold/30 pt-5">
+                  {stats(r).map((s) => (
+                    <div>
+                      <dt class="label text-mist">{s.label}</dt>
+                      <dd class="tabular mt-2 flex items-baseline gap-1.5">
+                        <span class="font-display text-[2rem] leading-none text-gold sm:text-[2.5rem]">{s.value}</span>
+                        <span class="text-sm text-mist">{s.unit}</span>
+                      </dd>
+                    </div>
+                  ))}
+                </dl>
+                <span class="link-quiet mt-7 text-ivory">
+                  Explorează {r.name} <span aria-hidden="true">→</span>
+                </span>
+              </div>
+            </a>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- Comparison strip -->
+  <section class="on-dark section bg-black text-ivory" aria-labelledby="comparatie">
+    <div class="container-site grid gap-14 lg:grid-cols-[1fr_1.4fr]">
+      <SectionHeading kicker="Comparație" title={`${left.name} sau ${right.name}?`} id="comparatie" tone="dark">
+        Aceleași criterii pentru amândouă: cât schiezi, cât de sus urci, cât conduci și cât costă ziua pe pârtie.
+      </SectionHeading>
+      <div data-reveal>
+        <table class="w-full text-left">
+          <thead>
+            <tr class="border-b border-gold/30">
+              <th class="py-4 pr-4"><span class="sr-only">Criteriu</span></th>
+              <th class="py-4 pr-4 font-display text-xl font-normal">{left.name}</th>
+              <th class="py-4 font-display text-xl font-normal">{right.name}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {
+              compare.map((row) => (
+                <tr class="border-b border-gold/15">
+                  <th scope="row" class="label py-4 pr-4 align-baseline font-medium text-mist">{row.label}</th>
+                  <td class="tabular py-4 pr-4 text-ivory">{row.get(left)}</td>
+                  <td class="tabular py-4 text-ivory">{row.get(right)}</td>
+                </tr>
+              ))
+            }
+          </tbody>
+        </table>
+        <a href={`/compara/${left.slug}-vs-${right.slug}/`} class="link-quiet mt-8 text-ivory">
+          Comparația completă <span aria-hidden="true">→</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Map teaser -->
+  <section class="on-dark bg-midnight text-ivory" aria-labelledby="harti">
+    <div class="container-site section grid items-center gap-12 lg:grid-cols-[1fr_1.3fr]">
+      <SectionHeading kicker="Hărți interactive" title="Fiecare pârtie, cu panta ei." id="harti" tone="dark">
+        Harta arată pârtiile în culorile europene, lifturile și, la click, lungimea, diferența de nivel și cea mai
+        abruptă porțiune din fiecare pârtie. Cu teren 3D.
+      </SectionHeading>
+      <div class="grid grid-cols-2 gap-3" data-reveal>
+        {
+          [left, right].map((r) => (
+            <a href={`${r.url}#harta`} class="group relative block overflow-hidden rounded-lg no-underline">
+              <img src={`/maps/${r.slug}.webp`} alt={`Harta pârtiilor din ${r.name}`} width="800" height="500" loading="lazy" decoding="async" class="aspect-[4/5] w-full object-cover opacity-90 transition-opacity group-hover:opacity-100" />
+              <span class="glass absolute inset-x-3 bottom-3 rounded-sm px-3 py-2 text-sm text-ivory">
+                {r.name} <span aria-hidden="true">→</span>
+              </span>
+            </a>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- Where the numbers come from -->
+  <section class="section" aria-labelledby="date">
+    <div class="container-site">
+      <SectionHeading kicker="Metodă" title="De unde vin cifrele." id="date" />
+      <div class="mt-14 grid gap-10 md:grid-cols-3">
+        {
+          [
+            { k: 'Pârtii și lifturi', t: 'OpenStreetMap', d: 'Fiecare pârtie și lift, cartografiate de comunitate și prelucrate prin OpenSkiMap.' },
+            { k: 'Pante', t: 'Copernicus DEM', d: 'Calculăm noi lungimea, diferența de nivel și cea mai abruptă porțiune de 100 m.' },
+            { k: 'Prețuri', t: 'Site-urile oficiale', d: 'Fiecare preț are sursa și data verificării. Ce nu e publicat apare ca „în curând”.' },
+          ].map((x) => (
+            <div class="border-t border-gold-deep/40 pt-6" data-reveal>
+              <p class="label text-gold-deep">{x.k}</p>
+              <h3 class="mt-3 text-h3">{x.t}</h3>
+              <p class="mt-3 text-slate">{x.d}</p>
+            </div>
+          ))
+        }
+      </div>
+      <a href="/despre/date/" class="link-quiet mt-12">Toate sursele și licențele <span aria-hidden="true">→</span></a>
+    </div>
   </section>
 </Base>
+
+<style>
+  .split {
+    clip-path: polygon(62% 0, 100% 0, 100% 100%, 44% 100%);
+  }
+  @media (max-width: 639px) {
+    .split {
+      clip-path: polygon(78% 0, 100% 0, 100% 100%, 52% 100%);
+    }
+  }
+  /* Gentle parallax on the hero only, where scroll-driven animations exist; no JavaScript. */
+  @supports (animation-timeline: scroll()) {
+    @media (prefers-reduced-motion: no-preference) {
+      .hero-art {
+        animation: drift linear both;
+        animation-timeline: scroll(root);
+        animation-range: 0 100vh;
+      }
+      @keyframes drift {
+        to {
+          transform: translateY(18vh) scale(1.04);
+        }
+      }
+    }
+  }
+</style>

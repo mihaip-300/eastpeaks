@@ -62,10 +62,18 @@
   "verification": {
     "status": "de-verificat",
     "estimates": [
-      "drive.*.road_costs_eur",
       "accommodation_per_night_eur",
-      "rental_per_day_eur"
+      "drive.*.road_costs_eur",
+      "rental_per_day_eur",
+      "tags"
     ],
     "notes": "Sezonul 2026/27: 01.12.2026–11.04.2027, după banskoski.com. Distanțe și timpi: OSRM, fără trafic și opriri. Costurile de drum: vinieta Bulgaria și taxele de pod la Dunăre, dus-întors, estimate."
-  }
+  },
+  "tags": [
+    "Pârtii lungi",
+    "Gondolă din oraș",
+    "Après-ski",
+    "O săptămână întreagă"
+  ],
+  "conditions_url": "https://www.banskoski.com/"
 }

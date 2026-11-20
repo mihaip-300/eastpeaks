@@ -1,0 +1,34 @@
+---
+// Segmented control between resorts. Plain links: works without JavaScript and keeps
+// each resort a real, crawlable page.
+import { getResorts } from '../lib/resorts';
+
+interface Props {
+  current: string;
+  tone?: 'light' | 'dark';
+}
+
+const { current, tone = 'light' } = Astro.props;
+const resorts = await getResorts();
+const dark = tone === 'dark';
+---
+
+<nav aria-label="Alege stațiunea" class:list={['inline-flex rounded-sm border p-1', dark ? 'border-gold/30' : 'border-stone bg-ivory']}>
+  {
+    resorts.map((r) => {
+      const active = r.slug === current;
+      return (
+        <a
+          href={r.url}
+          aria-current={active ? 'page' : undefined}
+          class:list={[
+            'rounded-[3px] px-3.5 py-1.5 text-sm font-medium whitespace-nowrap no-underline transition-colors',
+            active ? (dark ? 'bg-ivory text-midnight' : 'bg-midnight text-ivory') : dark ? 'text-mist hover:text-ivory' : 'text-slate hover:text-midnight',
+          ]}
+        >
+          {r.name}
+        </a>
+      );
+    })
+  }
+</nav>

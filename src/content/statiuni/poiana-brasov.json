@@ -61,10 +61,18 @@
   "verification": {
     "status": "de-verificat",
     "estimates": [
-      "season",
       "accommodation_per_night_eur",
-      "rental_per_day_eur"
+      "rental_per_day_eur",
+      "season",
+      "tags"
     ],
     "notes": "Distanțe și timpi: OSRM, fără trafic și opriri. Costurile de drum presupun că ai deja rovinieta."
-  }
+  },
+  "tags": [
+    "Aproape de oraș",
+    "Familii",
+    "Începători",
+    "Weekend"
+  ],
+  "conditions_url": "https://www.skibv.ro/"
 }

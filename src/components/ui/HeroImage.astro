@@ -1,0 +1,39 @@
+---
+// Responsive hero art (AVIF/WebP, blur-up placeholder) from data/generated/heroes.json.
+// Until real photographs exist, these are renders of the resort's own terrain.
+import heroes from '../../../data/generated/heroes.json';
+
+interface Props {
+  slug: string;
+  alt: string;
+  sizes?: string;
+  class?: string;
+  eager?: boolean;
+}
+
+const { slug, alt, sizes = '100vw', class: cls = '', eager = false } = Astro.props;
+const hero = (heroes as Record<string, { widths: number[]; width: number; height: number; lqip: string }>)[slug];
+const srcset = (ext: string) => hero?.widths.map((w) => `/heroes/${slug}-${w}.${ext} ${w}w`).join(', ');
+---
+
+{
+  hero ? (
+    <picture>
+      <source type="image/avif" srcset={srcset('avif')} sizes={sizes} />
+      <source type="image/webp" srcset={srcset('webp')} sizes={sizes} />
+      <img
+        src={`/heroes/${slug}-1600.webp`}
+        alt={alt}
+        width={hero.width}
+        height={hero.height}
+        loading={eager ? 'eager' : 'lazy'}
+        fetchpriority={eager ? 'high' : 'auto'}
+        decoding={eager ? 'sync' : 'async'}
+        class={`object-cover ${cls}`}
+        style={{ backgroundImage: `url(${hero.lqip})`, backgroundSize: 'cover' }}
+      />
+    </picture>
+  ) : (
+    <div class={`bg-midnight ${cls}`} role="img" aria-label={alt} />
+  )
+}

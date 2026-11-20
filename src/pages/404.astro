@@ -3,14 +3,13 @@ import Base from '../layouts/Base.astro';
 ---
 
 <Base title="Pagina nu există" description="Pagina căutată nu există." noindex>
-  <div class="mx-auto max-w-6xl px-4 py-20 text-center">
-    <p class="text-sm font-semibold text-accent">404</p>
-    <h1 class="mt-2 text-3xl font-bold tracking-tight">Pagina nu există</h1>
-    <p class="mt-3 text-muted">Poate a fost mutată sau adresa are o greșeală.</p>
-    <p class="mt-8">
-      <a href="/" class="font-semibold">Înapoi la pagina principală</a> · <a href="/statiuni/" class="font-semibold"
-        >Toate stațiunile</a
-      >
-    </p>
+  <div class="container-site section text-center">
+    <p class="label text-gold-deep">404</p>
+    <h1 class="mx-auto mt-4 max-w-3xl text-h1">Aici nu e nicio pârtie.</h1>
+    <p class="mx-auto mt-5 max-w-text text-lead text-slate">Pagina a fost mutată sau adresa are o greșeală.</p>
+    <div class="mt-10 flex flex-wrap justify-center gap-3">
+      <a href="/" class="btn btn-dark">Pagina principală</a>
+      <a href="/statiuni/" class="btn btn-outline">Toate stațiunile</a>
+    </div>
   </div>
 </Base>

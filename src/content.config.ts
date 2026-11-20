@@ -35,6 +35,10 @@ const statiuni = defineCollection({
       z.object({ src: z.string(), alt: z.string().min(3), credit: z.string(), license: z.string() }),
     ),
     official_km: z.number().positive().nullable(),
+    /** Character tags shown as chips (Familii, Începători, Après-ski…). */
+    tags: z.array(z.string().min(2)).default([]),
+    /** The resort's own snow and lift report, linked until we have live data. */
+    conditions_url: z.url().optional(),
     updated: z.iso.date(),
     verification: z
       .object({

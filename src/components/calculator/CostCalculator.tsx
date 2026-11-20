@@ -37,7 +37,7 @@ function clampInt(value: string, min: number, max: number): number {
 function Num(props: { id: string; label: string; value: number; min: number; max: number; onInput: (v: number) => void; step?: number }) {
   return (
     <div>
-      <label for={props.id} class="block text-sm font-medium">
+      <label for={props.id} class="label block text-mist">
         {props.label}
       </label>
       <input
@@ -49,7 +49,7 @@ function Num(props: { id: string; label: string; value: number; min: number; max
         step={props.step ?? 1}
         value={props.value}
         onInput={(e) => props.onInput(clampInt((e.target as HTMLInputElement).value, props.min, props.max))}
-        class="mt-1 w-full rounded-md border border-line px-3 py-2 tabular-nums"
+        class="mt-2 w-full rounded-sm border border-gold/25 bg-midnight px-3 py-2.5 text-ivory tabular-nums focus:border-gold"
       />
     </div>
   );
@@ -98,18 +98,18 @@ export default function CostCalculator({ slug, name, data, ronPerEur, rateNote, 
     { label: transport === 'car' ? 'Mașină (carburant și taxe)' : 'Transport', value: result.transport, hint: transport === 'car' ? `dus-întors din ${CITIES.find((c) => c.key === city)?.label}` : undefined },
   ];
 
-  const field = 'mt-1 w-full rounded-md border border-line bg-white px-3 py-2';
+  const field = 'mt-2 w-full rounded-sm border border-gold/25 bg-midnight px-3 py-2.5 text-ivory focus:border-gold';
 
   return (
-    <div class="grid gap-6 rounded-xl border border-line p-4 sm:p-6 lg:grid-cols-[1fr_20rem]">
-      <form class="grid grid-cols-2 gap-4 sm:grid-cols-3" onSubmit={(e) => e.preventDefault()}>
+    <div class="grid gap-10 lg:grid-cols-[1fr_21rem]">
+      <form class="grid grid-cols-2 gap-x-5 gap-y-6 sm:grid-cols-3" onSubmit={(e) => e.preventDefault()}>
         <Num id="calc-adults" label="Adulți" value={adults} min={1} max={20} onInput={setAdults} />
         <Num id="calc-children" label="Copii" value={children} min={0} max={20} onInput={setChildren} />
         <Num id="calc-days" label="Zile de schi" value={skiDays} min={1} max={14} onInput={setSkiDays} />
         <Num id="calc-nights" label="Nopți" value={nights} min={0} max={21} onInput={setNights} />
 
         <div>
-          <label for="calc-tier" class="block text-sm font-medium">Cazare</label>
+          <label for="calc-tier" class="label block text-mist">Cazare</label>
           <select id="calc-tier" value={tier} onChange={(e) => setTier((e.target as HTMLSelectElement).value as Tier)} class={field}>
             {TIERS.map((t) => (
               <option value={t.key} disabled={data.accommodationEur[t.key] == null}>{t.label}</option>
@@ -126,14 +126,14 @@ export default function CostCalculator({ slug, name, data, ronPerEur, rateNote, 
         />
 
         <fieldset class="col-span-2 sm:col-span-3">
-          <legend class="text-sm font-medium">Transport</legend>
-          <div class="mt-1 flex flex-wrap gap-x-5 gap-y-2">
+          <legend class="label text-mist">Transport</legend>
+          <div class="mt-3 flex flex-wrap gap-x-6 gap-y-2">
             <label class="inline-flex items-center gap-2">
-              <input type="radio" name="calc-transport" checked={transport === 'car'} onChange={() => setTransport('car')} class="accent-brand" />
+              <input type="radio" name="calc-transport" checked={transport === 'car'} onChange={() => setTransport('car')} class="accent-alpine-red" />
               Cu mașina
             </label>
             <label class="inline-flex items-center gap-2">
-              <input type="radio" name="calc-transport" checked={transport === 'manual'} onChange={() => setTransport('manual')} class="accent-brand" />
+              <input type="radio" name="calc-transport" checked={transport === 'manual'} onChange={() => setTransport('manual')} class="accent-alpine-red" />
               Altfel (introduc costul)
             </label>
           </div>
@@ -142,7 +142,7 @@ export default function CostCalculator({ slug, name, data, ronPerEur, rateNote, 
         {transport === 'car' ? (
           <>
             <div>
-              <label for="calc-city" class="block text-sm font-medium">Plecare din</label>
+              <label for="calc-city" class="label block text-mist">Plecare din</label>
               <select id="calc-city" value={city} onChange={(e) => setCity((e.target as HTMLSelectElement).value as City)} class={field}>
                 {CITIES.map((c) => (
                   <option value={c.key} disabled={!data.drive[c.key]}>{c.label}</option>
@@ -150,12 +150,12 @@ export default function CostCalculator({ slug, name, data, ronPerEur, rateNote, 
               </select>
             </div>
             <div>
-              <label for="calc-fuel" class="block text-sm font-medium">Carburant (lei/l)</label>
+              <label for="calc-fuel" class="label block text-mist">Carburant (lei/l)</label>
               <input id="calc-fuel" type="number" inputMode="decimal" min={1} max={20} step={0.1} value={fuelRon}
                 onInput={(e) => setFuelRon(Number((e.target as HTMLInputElement).value) || defaultFuelPriceRon)} class={`${field} tabular-nums`} />
             </div>
             <div>
-              <label for="calc-consumption" class="block text-sm font-medium">Consum (l/100 km)</label>
+              <label for="calc-consumption" class="label block text-mist">Consum (l/100 km)</label>
               <input id="calc-consumption" type="number" inputMode="decimal" min={2} max={25} step={0.1} value={consumption}
                 onInput={(e) => setConsumption(Number((e.target as HTMLInputElement).value) || defaultConsumption)} class={`${field} tabular-nums`} />
             </div>
@@ -165,39 +165,39 @@ export default function CostCalculator({ slug, name, data, ronPerEur, rateNote, 
         )}
 
         <label class="col-span-2 inline-flex items-center gap-2 sm:col-span-3">
-          <input type="checkbox" checked={rental} onChange={() => setRental((v) => !v)} class="accent-brand" />
+          <input type="checkbox" checked={rental} onChange={() => setRental((v) => !v)} class="accent-alpine-red" />
           Închiriez echipament (schiuri, clăpari, bețe)
         </label>
       </form>
 
-      <div class="rounded-lg bg-snow p-4" aria-live="polite">
-        <h3 class="font-semibold">Estimare pentru {name}</h3>
-        <dl class="mt-3 space-y-2 text-sm">
+      <div class="rounded-lg bg-midnight p-6 sm:p-7" aria-live="polite">
+        <h3 class="label">Estimare pentru {name}</h3>
+        <dl class="mt-5 space-y-3 text-[0.9375rem]">
           {lines.map((l) => (
             <div class="flex items-baseline justify-between gap-3">
               <dt>
                 {l.label}
-                {l.hint && <span class="block text-xs text-muted">{l.hint}</span>}
+                {l.hint && <span class="block text-xs text-mist">{l.hint}</span>}
               </dt>
-              <dd class="text-right tabular-nums">{l.value == null ? <span class="text-muted">nedisponibil</span> : eur.format(l.value)}</dd>
+              <dd class="text-right tabular-nums">{l.value == null ? <span class="text-mist">nedisponibil</span> : eur.format(l.value)}</dd>
             </div>
           ))}
         </dl>
-        <div class="mt-4 border-t border-line pt-3">
+        <div class="mt-6 border-t border-gold/25 pt-5">
           <p class="flex items-baseline justify-between">
-            <span class="font-semibold">Total</span>
-            <span class="text-2xl font-bold tabular-nums">{eur.format(result.total)}</span>
+            <span class="label">Total</span>
+            <span class="font-display text-[2.75rem] leading-none text-gold tabular-nums">{eur.format(result.total)}</span>
           </p>
-          <p class="text-right text-sm text-muted tabular-nums">≈ {lei.format(result.total * ronPerEur)} lei</p>
-          {result.incomplete && <p class="mt-2 text-xs text-muted">Totalul nu include liniile „nedisponibil”.</p>}
-          <p class="mt-2 text-xs text-muted">{rateNote}</p>
+          <p class="text-right text-sm text-mist tabular-nums">≈ {lei.format(result.total * ronPerEur)} lei</p>
+          {result.incomplete && <p class="mt-2 text-xs text-mist">Totalul nu include liniile „nedisponibil”.</p>}
+          <p class="mt-2 text-xs text-mist">{rateNote}</p>
         </div>
         {bookingTarget && (
           <a
             href={affiliateHref('booking', bookingTarget, slug)}
             rel={AFFILIATE_REL}
             target="_blank"
-            class="mt-4 block rounded-lg bg-brand px-4 py-2.5 text-center font-semibold text-white no-underline hover:bg-ink hover:no-underline"
+            class="btn btn-primary mt-6 w-full"
           >
             Vezi cazări în {name}
           </a>

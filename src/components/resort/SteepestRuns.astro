@@ -9,41 +9,46 @@ interface Props {
 
 const { runs } = Astro.props;
 const color = (d: string) => DIFFICULTIES.find((x) => x.key === d)?.color ?? '#8a8a8a';
+const th = 'label py-3 pr-4 font-medium text-gold-deep';
 ---
 
 {
   runs.length === 0 ? (
-    <p class="text-muted">În curând.</p>
+    <p class="text-slate">În curând.</p>
   ) : (
-    <div class="-mx-4 overflow-x-auto px-4">
-      <table class="w-full min-w-[34rem] text-sm">
+    <div class="-mx-5 overflow-x-auto px-5 sm:mx-0 sm:px-0">
+      <table class="w-full min-w-[40rem]">
         <thead>
-          <tr class="border-b border-line text-left text-muted">
-            <th class="py-2 pr-3 font-medium">Pârtie</th>
-            <th class="py-2 pr-3 font-medium">Dificultate</th>
-            <th class="py-2 pr-3 text-right font-medium">Lungime</th>
-            <th class="py-2 pr-3 text-right font-medium">Diferență de nivel</th>
-            <th class="py-2 pr-3 text-right font-medium">Pantă medie</th>
-            <th class="py-2 text-right font-medium">Pantă max. (100 m)</th>
+          <tr class="border-b border-stone text-left">
+            <th class={th}>Pârtie</th>
+            <th class={th}>Dificultate</th>
+            <th class={`${th} text-right`}>Lungime</th>
+            <th class={`${th} text-right`}>Diferență</th>
+            <th class={`${th} text-right`}>Pantă medie</th>
+            <th class={`${th} !pr-0 text-right`}>Pantă max.</th>
           </tr>
         </thead>
         <tbody>
           {runs.map((r) => (
-            <tr class="border-b border-line last:border-0">
-              <td class="py-2 pr-3">
-                {r.name ?? <span class="text-muted">fără nume</span>}
-                {r.name_local && <span class="block text-xs text-muted" lang="bg">{r.name_local}</span>}
+            <tr class="border-b border-stone">
+              <td class="py-4 pr-4">
+                <span class="font-display text-xl">{r.name ?? <span class="text-slate">fără nume</span>}</span>
+                {r.name_local && (
+                  <span class="block text-xs text-slate" lang="bg">
+                    {r.name_local}
+                  </span>
+                )}
               </td>
-              <td class="py-2 pr-3">
-                <span class="inline-flex items-center gap-1.5">
-                  <span class="inline-block h-2.5 w-2.5 rounded-full" style={{ background: color(r.difficulty) }} />
+              <td class="py-4 pr-4 text-sm">
+                <span class="inline-flex items-center gap-2">
+                  <span class="inline-block h-2 w-2 rounded-full" style={{ background: color(r.difficulty) }} />
                   {DIFFICULTY_LABEL[r.difficulty]}
                 </span>
               </td>
-              <td class="py-2 pr-3 text-right tabular-nums">{formatMeters(r.length_m)}</td>
-              <td class="py-2 pr-3 text-right tabular-nums">{formatMeters(r.drop_m)}</td>
-              <td class="py-2 pr-3 text-right tabular-nums">{formatPct(r.avg_gradient_pct)}</td>
-              <td class="py-2 text-right font-semibold tabular-nums">{formatPct(r.max_gradient_100m_pct)}</td>
+              <td class="tabular py-4 pr-4 text-right">{formatMeters(r.length_m)}</td>
+              <td class="tabular py-4 pr-4 text-right">{formatMeters(r.drop_m)}</td>
+              <td class="tabular py-4 pr-4 text-right">{formatPct(r.avg_gradient_pct)}</td>
+              <td class="tabular py-4 text-right font-display text-xl">{formatPct(r.max_gradient_100m_pct)}</td>
             </tr>
           ))}
         </tbody>

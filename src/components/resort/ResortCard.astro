@@ -1,6 +1,7 @@
 ---
-import { formatKm, formatMeters } from '../../lib/format';
+import { formatInt, formatKm } from '../../lib/format';
 import type { Resort } from '../../lib/resorts';
+import HeroImage from '../ui/HeroImage.astro';
 
 interface Props {
   resort: Resort;
@@ -10,24 +11,16 @@ const { resort } = Astro.props;
 const g = resort.generated;
 ---
 
-<a
-  href={resort.url}
-  class="group block overflow-hidden rounded-xl border border-line text-ink no-underline transition hover:border-accent hover:no-underline"
->
-  <img
-    src={`/maps/${resort.slug}.webp`}
-    alt={`Harta pârtiilor din ${resort.name}`}
-    width="800"
-    height="500"
-    loading="lazy"
-    decoding="async"
-    class="aspect-[8/5] w-full object-cover"
-  />
-  <div class="p-4">
-    <p class="text-lg font-semibold group-hover:text-accent">{resort.name}</p>
-    <p class="text-sm text-muted">{resort.editorial?.region ? `${resort.editorial.region}, ` : ''}{resort.country.name}</p>
-    <p class="mt-2 text-sm tabular-nums">
-      {formatKm(g.runs.km_total)} · {g.lifts.count} lifturi · {formatMeters(g.elevation_m.min)}–{formatMeters(g.elevation_m.max)}
+<a href={resort.url} class="group on-dark relative block overflow-hidden rounded-lg bg-black text-ivory no-underline">
+  <div class="aspect-[4/3]">
+    <HeroImage slug={resort.slug} alt={`Relieful din jurul stațiunii ${resort.name}`} sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw" class="h-full w-full transition-transform duration-[1200ms] ease-out group-hover:scale-[1.03]" />
+  </div>
+  <div class="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent"></div>
+  <div class="absolute inset-x-0 bottom-0 p-6">
+    <p class="label">{resort.editorial?.region ? `${resort.editorial.region} · ` : ''}{resort.country.name}</p>
+    <p class="mt-2 font-display text-h3">{resort.name}</p>
+    <p class="tabular mt-3 text-sm text-mist">
+      {formatKm(g.runs.km_total)} · {g.lifts.count} lifturi · până la {formatInt(g.elevation_m.max)} m
     </p>
   </div>
 </a>

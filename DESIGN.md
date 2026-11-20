@@ -71,6 +71,16 @@ Două familii, self-hosted prin Fontsource (subseturi latin, latin-ext, chirilic
 
 Butoane: `btn` + `btn-primary` (roșu), `btn-dark`, `btn-light`, `btn-outline` (linie aurie). Link discret: `link-quiet` (subliniere aurie la hover). Etichete: `label` + `text-gold` (închis) sau `text-gold-deep` (ivoire).
 
+## Imagini
+
+Până există fotografii reale, eroii sunt **randări ale reliefului real** al fiecărei stațiuni (`npm run pipeline -- make heroes`, `pipeline/src/heroes.py`): vedere oblică la ora albastră din Copernicus DEM, umbre navy, zăpadă ivoire, lumină joasă aurie pe creste. Ieșire în `public/heroes/{slug}-{2400,1600,960}.{avif,webp}`, cu placeholder blur în `data/generated/heroes.json`; componenta `HeroImage.astro` face `<picture>` cu `srcset`. Pe pagină apare discret „randat din Copernicus DEM”, ca să nu pară fotografie. Când vin fotografiile, se înlocuiesc fișierele, nu componentele.
+
+## Pagini
+
+- **Acasă:** hero împărțit pe diagonală (Poiana | Bansko), „Doi munți. Un sezon întreg.”, alegerea stațiunii, bandă de comparație (închis), teaser pentru hărți (navy), „De unde vin cifrele”.
+- **Stațiune:** hero cu 4 cifre „dintr-o privire” pe sticlă, bară de taburi lipicioasă (secțiuni pe aceeași pagină, active la scroll, cu comutatorul de stațiune), Prezentare · Condiții · Pârtii · Hartă · Cazare · Închirieri · Cum ajungi · Costuri · FAQ (generat din date).
+- Taburile cerute în brief sunt secțiuni ancorate, nu panouri ascunse: tot conținutul rămâne vizibil pentru căutare și pentru citit pe sărite. Insula `Tabs` rămâne pentru locurile unde panourile chiar trebuie ascunse.
+
 ## Mișcare
 
 Fade/reveal la scroll (atribut `data-reveal`, 700ms ease-out), parallax doar pe hero, count-up pe cifre. Totul se oprește la `prefers-reduced-motion`. Fără JavaScript, conținutul e vizibil.

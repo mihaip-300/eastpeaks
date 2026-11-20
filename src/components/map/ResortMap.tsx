@@ -81,8 +81,8 @@ function popupHtml(p: Record<string, unknown>): string {
   ];
   return `<div class="text-sm">
     <p class="font-semibold">${escapeHtml(name)}</p>
-    <p class="mb-1 flex items-center gap-1.5 text-muted"><span style="background:${color}" class="inline-block h-2.5 w-2.5 rounded-full"></span>${escapeHtml(difficulty)}</p>
-    <table>${rows.map(([k, v]) => `<tr><td class="pr-3 text-muted">${k}</td><td class="text-right tabular-nums">${v}</td></tr>`).join('')}</table>
+    <p class="mb-1 flex items-center gap-1.5 text-slate"><span style="background:${color}" class="inline-block h-2.5 w-2.5 rounded-full"></span>${escapeHtml(difficulty)}</p>
+    <table>${rows.map(([k, v]) => `<tr><td class="pr-3 text-slate">${k}</td><td class="text-right tabular-nums">${v}</td></tr>`).join('')}</table>
   </div>`;
 }
 
@@ -90,7 +90,7 @@ function liftPopupHtml(p: Record<string, unknown>): string {
   const type = LIFT_TYPE_LABEL[String(p.lift_type)] ?? 'lift';
   const name = typeof p.name === 'string' && p.name ? p.name : null;
   return `<div class="text-sm"><p class="font-semibold">${escapeHtml(name ?? type[0]!.toUpperCase() + type.slice(1))}</p>${
-    name ? `<p class="text-muted">${escapeHtml(type)}</p>` : ''
+    name ? `<p class="text-slate">${escapeHtml(type)}</p>` : ''
   }</div>`;
 }
 
@@ -284,7 +284,7 @@ export default function ResortMap({ name, slug, bbox, preview, pmtilesUrl }: Pro
 
   if (!active) {
     return (
-      <div class="relative overflow-hidden rounded-xl border border-line bg-snow">
+      <div class="relative overflow-hidden rounded-xl border border-stone bg-stone/50">
         <img
           src={preview}
           alt={`Harta pârtiilor din ${name}`}
@@ -298,7 +298,7 @@ export default function ResortMap({ name, slug, bbox, preview, pmtilesUrl }: Pro
           <button
             type="button"
             onClick={() => setActive(true)}
-            class="rounded-lg bg-brand px-5 py-3 font-semibold text-white shadow-lg hover:bg-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+            class="btn btn-primary"
           >
             Deschide harta interactivă
           </button>
@@ -309,14 +309,14 @@ export default function ResortMap({ name, slug, bbox, preview, pmtilesUrl }: Pro
 
   return (
     <div
-      class="fixed inset-0 z-50 flex flex-col bg-white sm:static sm:z-auto sm:rounded-xl sm:border sm:border-line"
+      class="fixed inset-0 z-50 flex flex-col bg-white sm:static sm:z-auto sm:rounded-xl sm:border sm:border-stone"
       role="region"
       aria-label={`Harta interactivă a pârtiilor din ${name}`}
       data-resort={slug}
     >
-      <div class="flex items-center justify-between gap-2 border-b border-line px-3 py-2 sm:hidden">
+      <div class="flex items-center justify-between gap-2 border-b border-stone px-3 py-2 sm:hidden">
         <p class="font-semibold">{name}</p>
-        <button type="button" onClick={close} class="rounded-md px-3 py-1.5 text-sm font-medium text-accent">
+        <button type="button" onClick={close} class="rounded-md px-3 py-1.5 text-sm font-medium text-gold-deep">
           Închide
         </button>
       </div>
@@ -326,19 +326,19 @@ export default function ResortMap({ name, slug, bbox, preview, pmtilesUrl }: Pro
           <div ref={container} class="h-full w-full" />
         </div>
         {status === 'loading' && (
-          <p class="pointer-events-none absolute inset-0 flex items-center justify-center text-sm text-muted">Se încarcă harta…</p>
+          <p class="pointer-events-none absolute inset-0 flex items-center justify-center text-sm text-slate">Se încarcă harta…</p>
         )}
         {status === 'error' && (
-          <p class="absolute inset-0 flex items-center justify-center p-6 text-center text-sm text-muted">
+          <p class="absolute inset-0 flex items-center justify-center p-6 text-center text-sm text-slate">
             Harta nu s-a putut încărca. Reîncarcă pagina sau încearcă mai târziu.
           </p>
         )}
       </div>
-      <div class="flex flex-wrap items-center gap-x-3 gap-y-2 border-t border-line px-3 py-2.5 text-sm">
+      <div class="flex flex-wrap items-center gap-x-3 gap-y-2 border-t border-stone px-3 py-2.5 text-sm">
         <span class="sr-only">Filtrează pârtiile după dificultate</span>
         {DIFFICULTIES.map((d) => (
           <label key={d.key} class="inline-flex cursor-pointer items-center gap-1.5 select-none">
-            <input type="checkbox" checked={shown.includes(d.key)} onChange={() => toggle(d.key)} class="accent-brand" />
+            <input type="checkbox" checked={shown.includes(d.key)} onChange={() => toggle(d.key)} class="accent-alpine-red" />
             <span
               class="inline-block h-1 w-4 rounded"
               style={{
@@ -350,7 +350,7 @@ export default function ResortMap({ name, slug, bbox, preview, pmtilesUrl }: Pro
           </label>
         ))}
         <label class="ml-auto inline-flex cursor-pointer items-center gap-1.5 select-none">
-          <input type="checkbox" checked={terrain3d} onChange={() => setTerrain3d((v) => !v)} class="accent-brand" />
+          <input type="checkbox" checked={terrain3d} onChange={() => setTerrain3d((v) => !v)} class="accent-alpine-red" />
           Teren 3D
         </label>
       </div>

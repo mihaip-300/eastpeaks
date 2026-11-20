@@ -43,6 +43,8 @@ npm run pipeline -- make tiles      # PMTiles cu tippecanoe → pipeline/out/pis
 npm run pipeline -- make previews   # public/maps/{slug}.webp
 npm run pipeline -- make qa         # pipeline/out/qa_report.md (ERROR = blocant)
 npm run pipeline -- make test       # pytest
+npm run pipeline -- make heroes     # imagini hero randate din DEM → public/heroes/ (placeholder până la fotografii)
+npm run pipeline -- make brand      # logo, simbol, favicon-uri → public/
 npm run tiles:upload                # urcă ultimul PMTiles pe R2 (din Windows, cu tokenul din .env)
 ```
 

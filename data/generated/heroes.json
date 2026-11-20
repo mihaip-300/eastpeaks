@@ -1,0 +1,24 @@
+{
+  "poiana-brasov": {
+    "widths": [
+      2400,
+      1600,
+      960
+    ],
+    "width": 2400,
+    "height": 1350,
+    "lqip": "data:image/webp;base64,UklGRnoAAABXRUJQVlA4IG4AAACQBACdASogABIAPtFepEyoJaOiMBgIAQAaCWcAzjgQ7z+XmXZ1oqK7alVZVAAA/vVrRsbETFg+ErlJn6mQw7NWX9ENi26zTXP9ALxCQ4oNwnO00GZxCVQ4s2nPo9NlrdhxHXIvvpdvsU3j4ImAAA==",
+    "credit": "Relief randat din Copernicus DEM GLO-30"
+  },
+  "bansko": {
+    "widths": [
+      2400,
+      1600,
+      960
+    ],
+    "width": 2400,
+    "height": 1350,
+    "lqip": "data:image/webp;base64,UklGRogAAABXRUJQVlA4IHwAAABwBACdASogABIAPtFYo0uoJSMhsAgBABoJZwAAW+sjxXPKzyYDlPwSQkaGAAD+9WsUUL1orxtwJJYWKdGFoNSIgCX7vk7C5Iof/Z0bH7lbnUP+UaMWxsdLHr3Uk0rq8w2koeKRfSGB8l4O0dYycDXuQYED6bQkfuohQIAA",
+    "credit": "Relief randat din Copernicus DEM GLO-30"
+  }
+}

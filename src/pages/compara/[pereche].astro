@@ -75,23 +75,23 @@ function winner(row: Row): 'a' | 'b' | null {
   title={`${a.name} vs ${b.name}: comparație`}
   description={`${a.name} sau ${b.name}? Comparăm kilometrii de pârtie, altitudinea, pantele, prețul skipass-ului și drumul din România.`}
 >
-  <div class="mx-auto max-w-4xl px-4 py-8">
+  <div class="container-site section">
     <Breadcrumbs
       crumbs={[
         { name: 'Stațiuni', url: '/statiuni/' },
         { name: `${a.name} vs ${b.name}`, url: `/compara/${a.slug}-vs-${b.slug}/` },
       ]}
     />
-    <h1 class="mt-2 text-3xl font-bold tracking-tight">{title}</h1>
-    <p class="mt-3 text-muted">Comparație pe date. Valoarea mai bună pe fiecare rând e marcată.</p>
+    <h1 class="mt-6 max-w-4xl text-h1">{title}</h1>
+    <p class="mt-5 max-w-text text-lead text-slate">Comparație pe date. Valoarea mai bună pe fiecare rând e marcată cu auriu.</p>
 
-    <div class="-mx-4 mt-6 overflow-x-auto px-4">
-      <table class="w-full min-w-[32rem] text-sm">
+    <div class="-mx-5 mt-12 max-w-4xl overflow-x-auto px-5 sm:mx-0 sm:px-0">
+      <table class="w-full min-w-[36rem]">
         <thead>
-          <tr class="border-b border-line text-left">
-            <th class="py-2 pr-3 font-medium text-muted"><span class="sr-only">Criteriu</span></th>
-            <th class="py-2 pr-3 text-lg font-semibold"><a href={a.url}>{a.name}</a></th>
-            <th class="py-2 text-lg font-semibold"><a href={b.url}>{b.name}</a></th>
+          <tr class="border-b border-stone text-left">
+            <th class="py-4 pr-4"><span class="sr-only">Criteriu</span></th>
+            <th class="py-4 pr-4 font-display text-2xl font-normal"><a href={a.url} class="no-underline hover:underline">{a.name}</a></th>
+            <th class="py-4 font-display text-2xl font-normal"><a href={b.url} class="no-underline hover:underline">{b.name}</a></th>
           </tr>
         </thead>
         <tbody>
@@ -99,10 +99,10 @@ function winner(row: Row): 'a' | 'b' | null {
             rows.map((row) => {
               const w = winner(row);
               return (
-                <tr class="border-b border-line">
-                  <th scope="row" class="py-2.5 pr-3 text-left font-normal text-muted">{row.label}</th>
-                  <td class:list={['py-2.5 pr-3 tabular-nums', w === 'a' && 'font-semibold text-accent']}>{row.get(a)}</td>
-                  <td class:list={['py-2.5 tabular-nums', w === 'b' && 'font-semibold text-accent']}>{row.get(b)}</td>
+                <tr class="border-b border-stone">
+                  <th scope="row" class="label py-4 pr-4 text-left font-medium text-slate">{row.label}</th>
+                  <td class:list={['tabular py-4 pr-4', w === 'a' && 'font-semibold text-gold-deep']}>{row.get(a)}</td>
+                  <td class:list={['tabular py-4', w === 'b' && 'font-semibold text-gold-deep']}>{row.get(b)}</td>
                 </tr>
               );
             })
@@ -110,7 +110,7 @@ function winner(row: Row): 'a' | 'b' | null {
         </tbody>
       </table>
     </div>
-    <p class="mt-4 text-xs text-muted">
+    <p class="mt-6 max-w-4xl text-xs text-slate">
       Kilometrii și pantele vin din OpenStreetMap și Copernicus DEM; cifrele oficiale ale stațiunilor pot fi mai mari.
     </p>
   </div>

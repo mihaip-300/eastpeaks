@@ -31,9 +31,9 @@ export interface GeneratedResort {
 
 const modules = import.meta.glob<GeneratedResort>('../../data/generated/*.json', { eager: true, import: 'default' });
 
-export const GENERATED: GeneratedResort[] = Object.entries(modules)
-  .filter(([path]) => !path.endsWith('/index.json'))
-  .map(([, data]) => data)
+// Resort files only: the folder also holds index.json and heroes.json.
+export const GENERATED: GeneratedResort[] = Object.values(modules)
+  .filter((data): data is GeneratedResort => typeof data?.slug === 'string' && typeof data?.runs === 'object')
   .sort((a, b) => a.name.localeCompare(b.name, 'ro'));
 
 export function generatedBySlug(slug: string): GeneratedResort | undefined {

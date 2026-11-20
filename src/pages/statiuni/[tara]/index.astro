@@ -26,15 +26,16 @@ const names = resorts.map((r) => r.name).join(', ');
   title={`Stațiuni de schi în ${country.name}`}
   description={`Stațiunile de schi din ${country.name} (${names}): hărți ale pârtiilor, prețuri la skipass și cât faci cu mașina din România.`}
 >
-  <div class="mx-auto max-w-6xl px-4 py-8">
+  <div class="container-site section">
     <Breadcrumbs
       crumbs={[
         { name: 'Stațiuni', url: '/statiuni/' },
         { name: country.name, url: `/statiuni/${country.slug}/` },
       ]}
     />
-    <h1 class="mt-2 text-3xl font-bold tracking-tight">Stațiuni de schi în {country.name}</h1>
-    <ul class="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+    <h1 class="mt-6 text-h1">Schi în {country.name}</h1>
+    <p class="mt-5 max-w-text text-lead text-slate">{names}: hărți ale pârtiilor, pante, prețuri și drumul din România.</p>
+    <ul class="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
       {
         resorts.map((r) => (
           <li>

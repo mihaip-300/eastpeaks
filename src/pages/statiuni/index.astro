@@ -1,65 +1,56 @@
 ---
 import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import ResortCard from '../../components/resort/ResortCard.astro';
+import SectionHeading from '../../components/ui/SectionHeading.astro';
 import { COUNTRIES } from '../../data/countries';
 import Base from '../../layouts/Base.astro';
-import { formatEur, formatKm, formatMeters } from '../../lib/format';
+import { formatEur, formatInt, formatKm } from '../../lib/format';
 import { getResorts } from '../../lib/resorts';
 
 const resorts = await getResorts();
-const countriesWithResorts = COUNTRIES.filter((c) => resorts.some((r) => r.country.slug === c.slug));
+const countries = COUNTRIES.filter((c) => resorts.some((r) => r.country.slug === c.slug));
+const th = 'label py-3 pr-4 font-medium text-gold-deep';
 ---
 
-<Base
-  title="Toate stațiunile de schi"
-  description="Stațiunile de schi din România, Balcani și Austria comparate pe kilometri de pârtie, altitudine și prețul skipass-ului."
->
-  <div class="mx-auto max-w-6xl px-4 py-8">
+<Base title="Toate stațiunile de schi" description="Stațiunile de schi comparate pe kilometri de pârtie, altitudine și prețul skipass-ului.">
+  <div class="container-site section">
     <Breadcrumbs crumbs={[{ name: 'Stațiuni', url: '/statiuni/' }]} />
-    <h1 class="mt-2 text-3xl font-bold tracking-tight">Toate stațiunile</h1>
-    <p class="mt-3 max-w-2xl text-muted">
-      Începem cu {resorts.length} stațiuni; lista crește înainte de sezon. Kilometrii vin din OpenStreetMap, prețurile de
-      pe site-urile oficiale.
+    <h1 class="mt-6 text-h1">Stațiuni</h1>
+    <p class="mt-5 max-w-text text-lead text-slate">
+      Începem cu {resorts.length} stațiuni; lista crește înainte de fiecare sezon. Kilometrii vin din OpenStreetMap,
+      prețurile de pe site-urile oficiale.
     </p>
-    <p class="mt-3 text-sm">
-      Pe țări:{' '}
-      {
-        countriesWithResorts.map((c, i) => (
-          <>
-            {i > 0 && ' · '}
-            <a href={`/statiuni/${c.slug}/`}>{c.name}</a>
-          </>
-        ))
-      }
+    <p class="mt-6 flex flex-wrap gap-x-6 gap-y-2">
+      {countries.map((c) => <a href={`/statiuni/${c.slug}/`} class="link-quiet">{c.name} <span aria-hidden="true">→</span></a>)}
     </p>
 
-    <div class="-mx-4 mt-6 overflow-x-auto px-4">
-      <table class="w-full min-w-[40rem] text-sm">
+    <ul class="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+      {resorts.map((r) => <li><ResortCard resort={r} /></li>)}
+    </ul>
+
+    <SectionHeading kicker="Tabel" title="Pe cifre." class="mt-24" />
+    <div class="-mx-5 mt-8 overflow-x-auto px-5 sm:mx-0 sm:px-0">
+      <table class="w-full min-w-[44rem]">
         <thead>
-          <tr class="border-b border-line text-left text-muted">
-            <th class="py-2 pr-3 font-medium">Stațiune</th>
-            <th class="py-2 pr-3 font-medium">Țară</th>
-            <th class="py-2 pr-3 text-right font-medium">Pârtii</th>
-            <th class="py-2 pr-3 text-right font-medium">Altitudine</th>
-            <th class="py-2 pr-3 text-right font-medium">Lifturi</th>
-            <th class="py-2 text-right font-medium">Skipass adult, 1 zi</th>
+          <tr class="border-b border-stone text-left">
+            <th class={th}>Stațiune</th>
+            <th class={th}>Țară</th>
+            <th class={`${th} text-right`}>Pârtii</th>
+            <th class={`${th} text-right`}>Altitudine</th>
+            <th class={`${th} text-right`}>Lifturi</th>
+            <th class={`${th} !pr-0 text-right`}>Skipass, 1 zi</th>
           </tr>
         </thead>
         <tbody>
           {
             resorts.map((r) => (
-              <tr class="border-b border-line">
-                <td class="py-2.5 pr-3 font-medium">
-                  <a href={r.url}>{r.name}</a>
-                </td>
-                <td class="py-2.5 pr-3">{r.country.name}</td>
-                <td class="py-2.5 pr-3 text-right tabular-nums">{formatKm(r.generated.runs.km_total)}</td>
-                <td class="py-2.5 pr-3 text-right tabular-nums">
-                  {formatMeters(r.generated.elevation_m.min)}–{formatMeters(r.generated.elevation_m.max)}
-                </td>
-                <td class="py-2.5 pr-3 text-right tabular-nums">{r.generated.lifts.count}</td>
-                <td class="py-2.5 text-right tabular-nums">
-                  {r.priceEur?.adult_1d != null ? `≈ ${formatEur(r.priceEur.adult_1d)}` : <span class="text-muted">nedisponibil</span>}
-                </td>
+              <tr class="border-b border-stone">
+                <td class="py-4 pr-4"><a href={r.url} class="font-display text-xl no-underline hover:underline">{r.name}</a></td>
+                <td class="py-4 pr-4">{r.country.name}</td>
+                <td class="tabular py-4 pr-4 text-right">{formatKm(r.generated.runs.km_total)}</td>
+                <td class="tabular py-4 pr-4 text-right">{formatInt(r.generated.elevation_m.min)}–{formatInt(r.generated.elevation_m.max)} m</td>
+                <td class="tabular py-4 pr-4 text-right">{r.generated.lifts.count}</td>
+                <td class="tabular py-4 text-right">{r.priceEur?.adult_1d != null ? `≈ ${formatEur(r.priceEur.adult_1d)}` : <span class="text-slate">în curând</span>}</td>
               </tr>
             ))
           }

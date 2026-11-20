@@ -5,14 +5,18 @@ interface Props {
   title: string;
   description: string;
   noindex?: boolean;
+  kicker?: string;
 }
 
-const props = Astro.props;
+const { kicker = 'EastPeaks', ...props } = Astro.props;
 ---
 
 <Base {...props}>
-  <article class="prose-ro mx-auto px-4 py-10">
-    <h1>{props.title}</h1>
-    <slot />
+  <article class="container-site section">
+    <div class="prose-ed">
+      <p class="label text-gold-deep">{kicker}</p>
+      <h1 class="mt-4">{props.title}</h1>
+      <slot />
+    </div>
   </article>
 </Base>

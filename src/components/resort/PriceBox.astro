@@ -1,4 +1,5 @@
 ---
+// Skipass prices on the dark "Costuri" section: local currency + converted value, season, source.
 import { RON_PER_EUR } from '../../data/constants';
 import { formatDate, formatEur, formatInt, formatLei } from '../../lib/format';
 import type { Resort } from '../../lib/resorts';
@@ -26,40 +27,49 @@ function local(value: number, currency: string): string {
   if (currency === 'EUR') return formatEur(value);
   return `${formatInt(value)} ${currency}`;
 }
-const checked = p ? formatDate(p.checked_at) : '';
+function converted(value: number, inEur: number | null | undefined, currency: string): string {
+  if (currency === 'EUR') return `≈ ${formatLei(value * RON_PER_EUR)}`;
+  return inEur != null ? `≈ ${formatEur(inEur)}` : '';
+}
 ---
 
-<div class="rounded-xl border border-line p-4 sm:p-5">
+<div>
   {
     !p || !hasAny ? (
-      <p class="text-muted">
-        Prețurile pe zi nu sunt încă disponibile.
-        {p?.note && <span class="block mt-1 text-sm">{p.note}</span>}
-      </p>
+      <div class="rounded-lg bg-midnight p-6">
+        <p class="font-display text-h3 text-ivory">Prețurile pe zi apar în curând.</p>
+        {p?.note && <p class="mt-3 text-sm text-mist">{p.note}</p>}
+      </div>
     ) : (
-      <table class="w-full text-sm">
-        <tbody>
-          {rows.map(([label, value, inEur]) => (
-            <tr class="border-b border-line last:border-0">
-              <th scope="row" class="py-2 pr-3 text-left font-normal">
-                {label}
-              </th>
-              <td class="py-2 text-right font-semibold tabular-nums">{value == null ? <span class="font-normal text-muted">nedisponibil</span> : local(value, p.currency)}</td>
-              <td class="w-24 py-2 text-right text-muted tabular-nums">
-                {value != null && p.currency !== 'EUR' && inEur != null ? `≈ ${formatEur(inEur)}` : value != null && p.currency === 'EUR' ? `≈ ${formatLei(value * RON_PER_EUR)}` : ''}
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      <dl class="divide-y divide-gold/15 border-y border-gold/25">
+        {rows.map(([label, value, inEur]) => (
+          <div class="flex items-baseline justify-between gap-4 py-3.5">
+            <dt class="text-mist">{label}</dt>
+            <dd class="tabular text-right">
+              {value == null ? (
+                <span class="text-mist">nedisponibil</span>
+              ) : (
+                <>
+                  <span class="font-display text-2xl text-gold">{local(value, p.currency)}</span>
+                  <span class="ml-3 text-sm text-mist">{converted(value, inEur, p.currency)}</span>
+                </>
+              )}
+            </dd>
+          </div>
+        ))}
+      </dl>
     )
   }
   {
     p && (
-      <p class="mt-3 text-xs text-muted">
+      <p class="mt-4 text-xs leading-relaxed text-mist">
         {p.season && <>Sezonul {p.season}. </>}
         {hasAny && p.note && <>{p.note} </>}
-        Sursa: <a href={p.source_url} rel="noopener" target="_blank">site-ul oficial</a>, verificat la {checked}.
+        Sursa:{' '}
+        <a href={p.source_url} rel="noopener" target="_blank" class="text-ivory">
+          site-ul oficial
+        </a>
+        , verificat la {formatDate(p.checked_at)}.
       </p>
     )
   }

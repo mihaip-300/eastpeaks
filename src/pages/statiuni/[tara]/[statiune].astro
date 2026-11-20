@@ -1,19 +1,29 @@
 ---
+// Resort template (DESIGN.md): hero + at-a-glance stats, sticky tab bar, editorial sections.
 import { PUBLIC_PMTILES_URL } from 'astro:env/client';
 import Breadcrumbs from '../../../components/Breadcrumbs.astro';
-import AffiliateBlocks from '../../../components/affiliate/AffiliateBlocks.astro';
 import CostCalculator from '../../../components/calculator/CostCalculator';
 import ResortMap from '../../../components/map/ResortMap';
 import GettingThere from '../../../components/resort/GettingThere.astro';
-import KeyFacts from '../../../components/resort/KeyFacts.astro';
 import PriceBox from '../../../components/resort/PriceBox.astro';
 import RunsByDifficulty from '../../../components/resort/RunsByDifficulty.astro';
 import SteepestRuns from '../../../components/resort/SteepestRuns.astro';
+import ResortNav from '../../../components/ResortNav.astro';
+import ResortSwitcher from '../../../components/ResortSwitcher.astro';
+import AffiliateCard from '../../../components/ui/AffiliateCard.astro';
+import Faq from '../../../components/ui/Faq.astro';
+import HeroImage from '../../../components/ui/HeroImage.astro';
+import LiveConditions from '../../../components/ui/LiveConditions.astro';
+import SectionHeading from '../../../components/ui/SectionHeading.astro';
+import TagChips from '../../../components/ui/TagChips.astro';
 import { FUEL_CONSUMPTION_L_100KM, FUEL_PRICE_RON, RON_PER_EUR, RON_PER_EUR_DATE, RON_PER_EUR_SOURCE } from '../../../data/constants';
+import { hasTarget } from '../../../data/partners';
+import { DIFFICULTY_LABEL } from '../../../data/pistes';
 import Base from '../../../layouts/Base.astro';
 import type { CalculatorData } from '../../../lib/calculator';
+import { formatDate, formatEur, formatInt, formatKm, formatLei, formatMeters, formatPct } from '../../../lib/format';
 import { getResorts, type Resort } from '../../../lib/resorts';
-import { formatDate } from '../../../lib/format';
+import { seasonLabel } from '../../../lib/season';
 import { jsonLd, resortDescription, resortTitle, skiResortJsonLd } from '../../../lib/seo';
 
 export async function getStaticPaths() {
@@ -30,6 +40,7 @@ interface Props {
 
 const { resort } = Astro.props;
 const { generated: g, editorial: e } = resort;
+const p = e?.partners;
 
 const calculatorData: CalculatorData | null = e && {
   skipassEur: resort.priceEur,
@@ -38,103 +49,268 @@ const calculatorData: CalculatorData | null = e && {
   rentalEur: e.rental_per_day_eur,
   drive: e.drive,
 };
+
+const glance = [
+  { label: 'Pârtii', value: formatKm(g.runs.km_total).replace(' km', ''), unit: 'km' },
+  { label: 'Altitudine maximă', value: formatInt(g.elevation_m.max), unit: 'm' },
+  { label: 'Diferență de nivel', value: formatInt(g.elevation_m.max - g.elevation_m.min), unit: 'm' },
+  resort.priceEur?.adult_1d != null
+    ? { label: 'Skipass adult', value: formatEur(resort.priceEur.adult_1d).replace(/\s?€/, ''), unit: '€ / zi' }
+    : { label: 'Lifturi', value: formatInt(g.lifts.count), unit: 'instalații' },
+];
+
+const rentals = [
+  { partner: 'skiset' as const, target: p?.skiset, label: 'Skiset' },
+  { partner: 'snowrental' as const, target: p?.snowrental, label: 'Snowrental' },
+].filter((r): r is { partner: 'skiset' | 'snowrental'; target: string; label: string } => hasTarget(r.partner, r.target));
+const cars = (p?.car ?? [])
+  .filter((code) => hasTarget('car', code))
+  .map((code) => ({ partner: 'car', target: code, label: e?.airports.find((a) => a.iata.toLowerCase() === code)?.name ?? code.toUpperCase() }));
+const booking = hasTarget('booking', p?.booking) ? p!.booking! : null;
+
+const steepest = g.steepest_runs[0];
+const bucuresti = e?.drive.bucuresti;
+const money = (v: number, currency: string) => (currency === 'RON' ? formatLei(v) : formatEur(v));
+const faq = [
+  {
+    q: `Câți kilometri de pârtie are ${resort.name}?`,
+    a: `În OpenStreetMap sunt cartografiate ${g.runs.count} pârtii, în total ${formatKm(g.runs.km_total)}, între ${formatMeters(g.elevation_m.min)} și ${formatMeters(g.elevation_m.max)}. Cifra oficială a stațiunii poate fi mai mare, pentru că unele pârtii lipsesc din hartă sau sunt măsurate altfel.`,
+  },
+  steepest && {
+    q: `Care e cea mai abruptă pârtie din ${resort.name}?`,
+    a: `${steepest.name ?? 'O pârtie fără nume'} (${DIFFICULTY_LABEL[steepest.difficulty].toLowerCase()}): ${formatMeters(steepest.length_m)} lungime, ${formatMeters(steepest.drop_m)} diferență de nivel și ${formatPct(steepest.max_gradient_100m_pct)} pe cea mai abruptă porțiune de 100 m, după calculul nostru din modelul digital al terenului.`,
+  },
+  {
+    q: `Cât costă skipass-ul la ${resort.name}?`,
+    a:
+      resort.price?.adult_1d != null
+        ? `O zi pentru adulți costă ${money(resort.price.adult_1d, resort.price.currency)}${resort.price.adult_6d != null ? `, iar șase zile ${money(resort.price.adult_6d, resort.price.currency)}` : ''}${resort.price.season ? ` (sezonul ${resort.price.season})` : ''}. Verifică prețul pe site-ul oficial înainte de plecare.`
+        : 'Prețurile pe zi nu sunt încă publicate de stațiune. Le adăugăm imediat ce apar.',
+  },
+  bucuresti && {
+    q: `Cât faci cu mașina din București până la ${resort.name}?`,
+    a: `Aproximativ ${formatInt(bucuresti.km)} km și ${bucuresti.hours.toLocaleString('ro-RO')} ore fără trafic și opriri. Iarna, socotește mai mult.`,
+  },
+  e && {
+    q: `Când e sezonul de schi la ${resort.name}?`,
+    a: `De obicei ${seasonLabel(e.season)}, în funcție de zăpadă. Data exactă o anunță stațiunea.`,
+  },
+  e?.airports[0] && {
+    q: 'Care e cel mai apropiat aeroport?',
+    a: `${e.airports[0].name} (${e.airports[0].iata}), la ${formatInt(e.airports[0].km)} km${e.airports[1] ? `; alternativ ${e.airports[1].name} (${e.airports[1].iata}), la ${formatInt(e.airports[1].km)} km` : ''}.`,
+  },
+].filter(Boolean) as { q: string; a: string }[];
+
+const sections = [
+  { id: 'prezentare', label: 'Prezentare' },
+  { id: 'conditii', label: 'Condiții' },
+  { id: 'partii', label: 'Pârtii' },
+  { id: 'harta', label: 'Hartă' },
+  { id: 'cazare', label: 'Cazare' },
+  { id: 'inchirieri', label: 'Închirieri' },
+  { id: 'cum-ajungi', label: 'Cum ajungi' },
+  { id: 'costuri', label: 'Costuri' },
+  { id: 'faq', label: 'FAQ' },
+];
 const rateDate = formatDate(RON_PER_EUR_DATE);
-const updated = e ? formatDate(e.updated) : null;
 const osmDate = formatDate(g.sources.openskimap_date);
 ---
 
-<Base title={resortTitle(resort)} description={resortDescription(resort)}>
+<Base title={resortTitle(resort)} description={resortDescription(resort)} overHero ogImage={`/heroes/${resort.slug}-1600.webp`}>
   <script slot="head" type="application/ld+json" set:html={jsonLd(skiResortJsonLd(resort, Astro.site!))} />
 
-  <div class="mx-auto max-w-6xl px-4 py-8">
-    <Breadcrumbs
-      crumbs={[
-        { name: 'Stațiuni', url: '/statiuni/' },
-        { name: resort.country.name, url: `/statiuni/${resort.country.slug}/` },
-        { name: resort.name, url: resort.url },
-      ]}
-    />
-    <h1 class="mt-2 text-3xl font-bold tracking-tight sm:text-4xl">{resort.name}</h1>
-    <p class="mt-1 text-muted">{e?.region ? `${e.region}, ${resort.country.name}` : resort.country.name}</p>
-    {
-      e ? (
-        <p class="mt-4 max-w-3xl text-lg leading-relaxed">{e.summary}</p>
-      ) : (
-        <p class="mt-4 text-muted">Descrierea stațiunii, prețurile și calculatorul apar în curând.</p>
-      )
-    }
+  <!-- Hero -->
+  <section class="on-dark relative isolate flex min-h-[92svh] items-end overflow-hidden bg-black text-ivory" aria-labelledby="titlu">
+    <!-- On phones the art fills the top of the screen and fades out, so the stats sit on black below it. -->
+    <div class="absolute inset-x-0 top-0 -z-10 h-[74svh] lg:inset-0 lg:h-auto">
+      <HeroImage slug={resort.slug} alt="" eager class="h-full w-full object-[50%_70%]" />
+      <div class="absolute inset-0 bg-gradient-to-t from-black via-black/30 to-black/20"></div>
+      <div class="absolute inset-0 hidden bg-gradient-to-r from-black/75 via-black/30 to-transparent lg:block"></div>
+    </div>
+    <div class="container-site pt-40 pb-8 sm:pb-12">
+      <p class="label animate-fade-up">{e?.region ? `${e.region} · ` : ''}{resort.country.name}</p>
+      <h1 id="titlu" class="mt-4 text-hero animate-fade-up [animation-delay:120ms]">{resort.name}</h1>
+      <p class="mt-5 text-lead text-ivory/90 animate-fade-up [animation-delay:200ms]">
+        Sezon <span class="tabular">{seasonLabel(e?.season)}</span>
+      </p>
+      <dl class="glass mt-10 grid grid-cols-2 gap-px overflow-hidden rounded-lg lg:grid-cols-4 animate-fade-up [animation-delay:300ms]">
+        {
+          glance.map((s) => (
+            <div class="bg-midnight/40 p-5 sm:p-6">
+              <dt class="label">{s.label}</dt>
+              <dd class="tabular mt-3 flex items-baseline gap-2">
+                <span class="font-display text-stat text-gold">{s.value}</span>
+                <span class="text-sm text-mist">{s.unit}</span>
+              </dd>
+            </div>
+          ))
+        }
+      </dl>
+      <p class="mt-4 text-xs text-mist/80">Imagine: relieful din jurul stațiunii, randat din Copernicus DEM.</p>
+    </div>
+  </section>
 
-    <div class="mt-8"><KeyFacts resort={resort} /></div>
+  <ResortNav current={resort.slug} sections={sections} />
 
-    <section class="mt-10" aria-labelledby="harta">
-      <h2 id="harta" class="text-2xl font-semibold tracking-tight">Harta pârtiilor</h2>
-      <div class="mt-4">
-        <ResortMap
-          client:visible
-          name={resort.name}
-          slug={resort.slug}
-          bbox={g.bbox}
-          preview={`/maps/${resort.slug}.webp`}
-          pmtilesUrl={PUBLIC_PMTILES_URL}
+  <div class="container-site">
+    <!-- Prezentare -->
+    <section id="prezentare" class="section grid gap-12 lg:grid-cols-[1.35fr_1fr]" aria-labelledby="prezentare-titlu">
+      <div>
+        <Breadcrumbs
+          crumbs={[
+            { name: 'Stațiuni', url: '/statiuni/' },
+            { name: resort.country.name, url: `/statiuni/${resort.country.slug}/` },
+            { name: resort.name, url: resort.url },
+          ]}
         />
+        <SectionHeading kicker="Prezentare" title={`Pe scurt despre ${resort.name}.`} id="prezentare-titlu" class="mt-8" />
+        {e ? <p class="mt-6 max-w-text text-lead" data-reveal>{e.summary}</p> : <p class="mt-6 text-slate">Descrierea stațiunii apare în curând.</p>}
+        {
+          e && e.tags.length > 0 && (
+            <div class="mt-8" data-reveal>
+              <TagChips tags={e.tags} />
+            </div>
+          )
+        }
       </div>
-      <p class="mt-2 text-xs text-muted">
-        Pârtii și lifturi: © contribuitorii OpenStreetMap, prin OpenSkiMap (date din {osmDate}). Pante calculate din
-        Copernicus DEM. Relief: Mapterhorn. Detalii pe <a href="/despre/date/">Surse și atribuiri</a>.
-      </p>
+      <aside class="self-end lg:pb-2" data-reveal>
+        <div class="lg:hidden"><ResortSwitcher current={resort.slug} /></div>
+        <dl class="mt-8 divide-y divide-stone border-y border-stone lg:mt-0">
+          {
+            (
+              [
+                ['Pârtii cartografiate', `${g.runs.count}`],
+                ['Lifturi', `${g.lifts.count}`],
+                ['Altitudine', `${formatInt(g.elevation_m.min)}–${formatInt(g.elevation_m.max)} m`],
+                e?.airports[0] ? ['Aeroport', `${e.airports[0].name} · ${formatInt(e.airports[0].km)} km`] : null,
+              ].filter(Boolean) as [string, string][]
+            ).map(([k, v]) => (
+              <div class="flex items-baseline justify-between gap-4 py-3.5">
+                <dt class="label text-gold-deep">{k}</dt>
+                <dd class="tabular text-right">{v}</dd>
+              </div>
+            ))
+          }
+        </dl>
+      </aside>
     </section>
 
-    <section class="mt-12" aria-labelledby="partii">
-      <h2 id="partii" class="text-2xl font-semibold tracking-tight">Pârtiile</h2>
-      <p class="mt-2 max-w-3xl text-muted">
-        {resort.name} are {g.runs.count} pârtii cartografiate în OpenStreetMap, în total {g.runs.km_total.toLocaleString('ro-RO')} km.
-        Cifrele oficiale ale stațiunii pot fi mai mari, pentru că unele pârtii lipsesc din hartă sau sunt măsurate altfel.
-      </p>
-      <div class="mt-5"><RunsByDifficulty generated={g} /></div>
-      <h3 class="mt-8 text-lg font-semibold">Cele mai abrupte pârtii</h3>
-      <p class="mt-1 text-sm text-muted">
-        Panta maximă e cea mai abruptă porțiune de aproximativ 100 m. Pantele sunt calculate de noi din modelul
-        digital al terenului și pot diferi de cele oficiale.
-      </p>
-      <div class="mt-3"><SteepestRuns runs={g.steepest_runs} /></div>
+    <!-- Condiții -->
+    <section id="conditii" class="pb-16 sm:pb-24" aria-label="Condiții">
+      <LiveConditions resortName={resort.name} officialUrl={e?.conditions_url} />
     </section>
 
-    <section class="mt-12" aria-labelledby="preturi">
-      <h2 id="preturi" class="text-2xl font-semibold tracking-tight">Prețuri skipass</h2>
-      <div class="mt-4 max-w-xl"><PriceBox resort={resort} /></div>
+    <!-- Pârtii -->
+    <section id="partii" class="section border-t border-stone" aria-labelledby="partii-titlu">
+      <SectionHeading kicker="Pârtii" title="Kilometri și pante, măsurate." id="partii-titlu">
+        {g.runs.count} pârtii și {formatKm(g.runs.km_total)} în OpenStreetMap. Pantele le calculăm din modelul digital al
+        terenului; panta maximă e cea mai abruptă porțiune de aproximativ 100 m.
+      </SectionHeading>
+      <div class="mt-12" data-reveal><RunsByDifficulty generated={g} /></div>
+      <h3 class="mt-16 text-h3">Cele mai abrupte pârtii</h3>
+      <div class="mt-6" data-reveal><SteepestRuns runs={g.steepest_runs} /></div>
     </section>
 
-    {
-      e && (
-        <section class="mt-12" aria-labelledby="cum-ajungi">
-          <h2 id="cum-ajungi" class="text-2xl font-semibold tracking-tight">Cum ajungi</h2>
-          <div class="mt-4">
-            <GettingThere editorial={e} />
-          </div>
-        </section>
-      )
-    }
+    <!-- Hartă -->
+    <section id="harta" class="section border-t border-stone" aria-labelledby="harta-titlu">
+      <SectionHeading kicker="Hartă" title="Harta pârtiilor." id="harta-titlu">
+        Pârtiile în culorile europene, lifturile și detaliile fiecărei pârtii la click. Cu filtre și teren 3D.
+      </SectionHeading>
+      <div class="mt-12">
+        <ResortMap client:visible name={resort.name} slug={resort.slug} bbox={g.bbox} preview={`/maps/${resort.slug}.webp`} pmtilesUrl={PUBLIC_PMTILES_URL} />
+      </div>
+      <p class="mt-3 text-xs text-slate">
+        Pârtii și lifturi: © contribuitorii OpenStreetMap, prin OpenSkiMap (date din {osmDate}). Pante: Copernicus DEM.
+        Relief: Mapterhorn. <a href="/despre/date/">Surse și atribuiri</a>.
+      </p>
+    </section>
+  </div>
 
-    {
-      e && (
-        <section class="mt-12" aria-labelledby="rezervari">
-          <h2 id="rezervari" class="text-2xl font-semibold tracking-tight">Cazare, echipament și mașină</h2>
-          <div class="mt-4">
-            <AffiliateBlocks resort={resort} />
-          </div>
-        </section>
-      )
-    }
+  <!-- Cazare + Închirieri -->
+  <section class="section bg-stone/60" aria-label="Cazare și închirieri">
+    <div class="container-site grid gap-16 lg:grid-cols-2">
+      <div id="cazare">
+        <SectionHeading kicker="Cazare" title="Unde dormi." />
+        <div class="mt-10" data-reveal>
+          {
+            booking ? (
+              <AffiliateCard
+                kicker="Booking.com"
+                title={`Cazare în ${resort.name}`}
+                text={`Hoteluri, pensiuni și apartamente în ${resort.name} și împrejurimi, cu prețuri pe nopțile tale.`}
+                from={resort.slug}
+                links={[{ partner: 'booking', target: booking, label: 'Vezi cazările' }]}
+              />
+            ) : (
+              <p class="text-slate">Recomandările de cazare apar în curând.</p>
+            )
+          }
+        </div>
+      </div>
+      <div id="inchirieri">
+        <SectionHeading kicker="Închirieri" title="Echipament." />
+        <div class="mt-10" data-reveal>
+          {
+            rentals.length ? (
+              <AffiliateCard
+                kicker="Rezervare online"
+                title="Schiuri și clăpari, rezervați din timp"
+                text="Rezervi online, ridici din magazinul din stațiune. De obicei mai ieftin decât la ghișeu."
+                from={resort.slug}
+                links={rentals.map((r) => ({ partner: r.partner, target: r.target, label: r.label }))}
+              />
+            ) : (
+              <div class="border-t border-gold-deep/40 pt-6">
+                <p class="label text-gold-deep">În stațiune</p>
+                <p class="mt-3 max-w-md text-slate">
+                  În {resort.name} sunt centre de închiriere la baza pârtiilor. Încă nu avem un partener cu rezervare online
+                  aici.
+                </p>
+              </div>
+            )
+          }
+        </div>
+      </div>
+    </div>
+  </section>
 
-    <section class="mt-12" aria-labelledby="calculator">
-      <h2 id="calculator" class="text-2xl font-semibold tracking-tight">Cât costă o vacanță la {resort.name}</h2>
+  <div class="container-site">
+    <!-- Cum ajungi -->
+    <section id="cum-ajungi" class="section" aria-labelledby="drum-titlu">
+      <SectionHeading kicker="Cum ajungi" title="Drumul până la pârtie." id="drum-titlu" />
       {
-        calculatorData ? (
-          <>
-            <p class="mt-2 max-w-3xl text-muted">
-              Estimare pentru skipass, cazare, închiriere și drum. Prețurile de cazare și închiriere sunt medii orientative.
-            </p>
-            <div class="mt-4">
+        e ? (
+          <div class="mt-12 grid gap-14 lg:grid-cols-3">
+            <div class="lg:col-span-2" data-reveal>
+              <GettingThere editorial={e} />
+            </div>
+            {cars.length > 0 && (
+              <div data-reveal>
+                <AffiliateCard kicker="Mașină de la aeroport" title="Zbori, apoi conduci" text="Compară ofertele de închiriere de la aeroport, cu ridicare la sosire." from={resort.slug} links={cars} />
+              </div>
+            )}
+          </div>
+        ) : (
+          <p class="mt-8 text-slate">În curând.</p>
+        )
+      }
+    </section>
+  </div>
+
+  <!-- Costuri -->
+  <section id="costuri" class="on-dark section bg-black text-ivory" aria-labelledby="cost-titlu">
+    <div class="container-site">
+      <SectionHeading kicker="Costuri" title={`Cât costă o săptămână la ${resort.name}.`} id="cost-titlu" tone="dark">
+        Skipass, cazare, echipament și drum, într-o estimare pe care o ajustezi. Cazarea și închirierea sunt medii orientative.
+      </SectionHeading>
+      <div class="mt-12 grid gap-10 lg:grid-cols-[1fr_2fr]">
+        <div data-reveal>
+          <h3 class="label">Skipass</h3>
+          <div class="mt-4"><PriceBox resort={resort} /></div>
+        </div>
+        <div data-reveal>
+          {
+            calculatorData ? (
               <CostCalculator
                 client:visible
                 slug={resort.slug}
@@ -144,33 +320,33 @@ const osmDate = formatDate(g.sources.openskimap_date);
                 rateNote={`Curs: 1 € = ${RON_PER_EUR.toLocaleString('ro-RO')} lei (${RON_PER_EUR_SOURCE}, ${rateDate}).`}
                 defaultFuelPriceRon={FUEL_PRICE_RON}
                 defaultConsumption={FUEL_CONSUMPTION_L_100KM}
-                bookingTarget={e?.partners.booking ?? null}
+                bookingTarget={booking}
               />
-            </div>
-            <p class="mt-3 text-xs text-muted">
-              Unele linkuri sunt de afiliere: dacă rezervi prin ele, primim un comision, fără cost în plus pentru tine.{' '}
-              <a href="/afiliere/">Detalii</a>.
-            </p>
-          </>
-        ) : (
-          <p class="mt-2 text-muted">În curând.</p>
+            ) : (
+              <p class="text-mist">Calculatorul apare în curând.</p>
+            )
+          }
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="container-site">
+    <!-- FAQ -->
+    <section id="faq" class="section" aria-labelledby="faq-titlu">
+      <div class="grid gap-12 lg:grid-cols-[1fr_1.6fr]">
+        <SectionHeading kicker="Întrebări" title="Întrebări frecvente." id="faq-titlu" />
+        <div data-reveal><Faq items={faq} /></div>
+      </div>
+      {
+        e && (
+          <p class="mt-16 max-w-3xl text-sm text-slate">
+            Date actualizate la {formatDate(e.updated)}.
+            {e.verification.status === 'de-verificat' && ' Unele valori sunt estimări în curs de verificare.'}
+            {e.verification.notes && <> {e.verification.notes}</>} Ai observat o greșeală? <a href="/contact/">Scrie-ne</a>.
+          </p>
         )
       }
     </section>
-
-    {
-      e && (
-        <aside class="mt-12 rounded-xl bg-snow p-4 text-sm text-muted">
-          <p>
-            Date actualizate la {updated}.
-            {e.verification.status === 'de-verificat' && ' Unele valori sunt estimări și sunt încă în curs de verificare.'}
-            {e.verification.notes && <> {e.verification.notes}</>}
-          </p>
-          <p class="mt-1">
-            Ai observat o greșeală? <a href="/contact/">Scrie-ne</a>.
-          </p>
-        </aside>
-      )
-    }
   </div>
 </Base>

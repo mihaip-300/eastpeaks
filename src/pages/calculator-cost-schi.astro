@@ -1,0 +1,69 @@
+---
+// Planifică: the cost calculator for every resort on one page (HANDOFF 7, /calculator-cost-schi/).
+import CostCalculator from '../components/calculator/CostCalculator';
+import SectionHeading from '../components/ui/SectionHeading.astro';
+import { FUEL_CONSUMPTION_L_100KM, FUEL_PRICE_RON, RON_PER_EUR, RON_PER_EUR_DATE, RON_PER_EUR_SOURCE } from '../data/constants';
+import { hasTarget } from '../data/partners';
+import Base from '../layouts/Base.astro';
+import { formatDate } from '../lib/format';
+import { getResorts } from '../lib/resorts';
+
+const resorts = (await getResorts()).filter((r) => r.editorial);
+const rateNote = `Curs: 1 € = ${RON_PER_EUR.toLocaleString('ro-RO')} lei (${RON_PER_EUR_SOURCE}, ${formatDate(RON_PER_EUR_DATE)}).`;
+---
+
+<Base
+  title="Calculator cost vacanță la schi"
+  description="Cât costă o vacanță la schi în Poiana Brașov sau Bansko: skipass, cazare, închiriere echipament și drum cu mașina, pe persoanele și zilele tale."
+>
+  <div class="container-site section">
+    <SectionHeading kicker="Planifică" title="Cât costă vacanța ta la schi.">
+      Alege stațiunea, câte persoane și câte zile. Calculăm skipass-ul, cazarea, echipamentul și drumul cu mașina din
+      București, Cluj sau Brașov.
+    </SectionHeading>
+    <nav aria-label="Alege stațiunea" class="mt-10 inline-flex rounded-sm border border-stone p-1">
+      {resorts.map((r) => <a href={`#${r.slug}`} class="rounded-[3px] px-4 py-2 text-sm font-medium text-slate no-underline hover:bg-stone hover:text-midnight">{r.name}</a>)}
+    </nav>
+  </div>
+
+  {
+    resorts.map((r, i) => (
+      <section id={r.slug} class:list={['on-dark section text-ivory', i % 2 === 0 ? 'bg-black' : 'bg-midnight']} aria-labelledby={`calc-${r.slug}`}>
+        <div class="container-site">
+          <div class="flex flex-wrap items-end justify-between gap-4">
+            <div>
+              <p class="label">{r.country.name}</p>
+              <h2 id={`calc-${r.slug}`} class="mt-3 text-h2">{r.name}</h2>
+            </div>
+            <a href={`${r.url}#costuri`} class="link-quiet text-ivory">Prețuri și detalii <span aria-hidden="true">→</span></a>
+          </div>
+          <div class="mt-10">
+            <CostCalculator
+              client:visible
+              slug={r.slug}
+              name={r.name}
+              data={{
+                skipassEur: r.priceEur,
+                accommodationEur: r.editorial!.accommodation_per_night_eur,
+                roomCapacity: r.editorial!.room_capacity,
+                rentalEur: r.editorial!.rental_per_day_eur,
+                drive: r.editorial!.drive,
+              }}
+              ronPerEur={RON_PER_EUR}
+              rateNote={rateNote}
+              defaultFuelPriceRon={FUEL_PRICE_RON}
+              defaultConsumption={FUEL_CONSUMPTION_L_100KM}
+              bookingTarget={hasTarget('booking', r.editorial!.partners.booking) ? r.editorial!.partners.booking : null}
+            />
+          </div>
+        </div>
+      </section>
+    ))
+  }
+  <div class="container-site py-10">
+    <p class="max-w-3xl text-sm text-slate">
+      Estimările de cazare și închiriere sunt medii orientative, de verificat. Linkurile spre cazări sunt de afiliere:
+      dacă rezervi prin ele, primim un comision, fără cost în plus pentru tine. <a href="/afiliere/">Detalii</a>.
+    </p>
+  </div>
+</Base>

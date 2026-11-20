@@ -1,0 +1,71 @@
+---
+// Sticky tab bar for the resort template: the brief's tabs, as in-page sections so
+// every section stays crawlable and scannable. The active tab follows the scroll.
+import ResortSwitcher from './ResortSwitcher.astro';
+
+interface Props {
+  current: string;
+  sections: { id: string; label: string }[];
+}
+
+const { current, sections } = Astro.props;
+---
+
+<div class="resort-nav sticky top-16 z-30 border-b border-stone bg-ivory/95 backdrop-blur-md sm:top-[7.25rem]">
+  <div class="container-site flex items-center gap-6">
+    <div class="hidden py-2.5 lg:block"><ResortSwitcher current={current} /></div>
+    <nav aria-label="Secțiuni" class="-mx-5 min-w-0 flex-1 overflow-x-auto px-5 lg:mx-0 lg:px-0">
+      <ul class="flex gap-7 lg:justify-end">
+        {
+          sections.map((s) => (
+            <li>
+              <a href={`#${s.id}`} data-section={s.id} class="tab relative block py-4 text-[0.9375rem] font-medium whitespace-nowrap text-slate no-underline hover:text-midnight">
+                {s.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+  </div>
+</div>
+
+<style>
+  .tab::after {
+    content: '';
+    position: absolute;
+    inset: auto 0 -1px 0;
+    height: 2px;
+    background: var(--color-alpine-red);
+    transform: scaleX(0);
+    transition: transform 300ms var(--ease-out-soft);
+  }
+  .tab.is-active {
+    color: var(--color-midnight);
+  }
+  .tab.is-active::after {
+    transform: scaleX(1);
+  }
+</style>
+
+<script is:inline>
+  (() => {
+    const tabs = [...document.querySelectorAll('.resort-nav [data-section]')];
+    const byId = new Map(tabs.map((t) => [t.dataset.section, t]));
+    const sections = tabs.map((t) => document.getElementById(t.dataset.section)).filter(Boolean);
+    if (!('IntersectionObserver' in window) || !sections.length) return;
+    const visible = new Set();
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((e) => (e.isIntersecting ? visible.add(e.target.id) : visible.delete(e.target.id)));
+        const first = sections.find((s) => visible.has(s.id));
+        if (!first) return;
+        tabs.forEach((t) => t.classList.toggle('is-active', t.dataset.section === first.id));
+        const active = byId.get(first.id);
+        active?.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+      },
+      { rootMargin: '-35% 0px -55% 0px' },
+    );
+    sections.forEach((s) => io.observe(s));
+  })();
+</script>

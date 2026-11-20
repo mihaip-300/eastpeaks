@@ -19,47 +19,46 @@ function hours(h: number): string {
   const [hh, mm] = min === 60 ? [whole + 1, 0] : [whole, min];
   return hh === 0 ? `${mm} min` : mm === 0 ? `${hh} h` : `${hh} h ${mm} min`;
 }
+const th = 'label py-3 pr-4 font-medium text-gold-deep';
 ---
 
-<div class="grid gap-6 sm:grid-cols-2">
+<div class="grid gap-12 sm:grid-cols-2">
   <div>
-    <h3 class="font-semibold">Cu mașina</h3>
-    <table class="mt-2 w-full text-sm">
+    <h3 class="text-h3">Cu mașina</h3>
+    <table class="mt-5 w-full">
       <thead>
-        <tr class="border-b border-line text-left text-muted">
-          <th class="py-2 pr-3 font-medium">Din</th>
-          <th class="py-2 pr-3 text-right font-medium">Distanță</th>
-          <th class="py-2 pr-3 text-right font-medium">Timp</th>
-          <th class="py-2 text-right font-medium">Taxe drum*</th>
+        <tr class="border-b border-stone text-left">
+          <th class={th}>Din</th>
+          <th class={`${th} text-right`}>Distanță</th>
+          <th class={`${th} text-right`}>Timp</th>
+          <th class={`${th} !pr-0 text-right`}>Taxe*</th>
         </tr>
       </thead>
       <tbody>
         {
           drives.map((d) => (
-            <tr class="border-b border-line last:border-0">
-              <td class="py-2 pr-3">{d.city}</td>
-              <td class="py-2 pr-3 text-right tabular-nums">{formatInt(d.km)} km</td>
-              <td class="py-2 pr-3 text-right tabular-nums">~{hours(d.hours)}</td>
-              <td class="py-2 text-right tabular-nums">{d.road_costs_eur ? formatEur(d.road_costs_eur) : '–'}</td>
+            <tr class="border-b border-stone">
+              <td class="py-3.5 pr-4">{d.city}</td>
+              <td class="tabular py-3.5 pr-4 text-right whitespace-nowrap">{formatInt(d.km)} km</td>
+              <td class="tabular py-3.5 pr-4 text-right whitespace-nowrap">~{hours(d.hours)}</td>
+              <td class="tabular py-3.5 text-right">{d.road_costs_eur ? formatEur(d.road_costs_eur) : '–'}</td>
             </tr>
           ))
         }
       </tbody>
     </table>
-    <p class="mt-2 text-xs text-muted">
-      * Dus-întors, pentru o mașină. Timpii sunt fără trafic și opriri; iarna, socotește mai mult.
-    </p>
+    <p class="mt-3 text-xs text-slate">* Dus-întors, pentru o mașină. Timpii sunt fără trafic și opriri; iarna, socotește mai mult.</p>
   </div>
   <div>
-    <h3 class="font-semibold">Cu avionul</h3>
-    <ul class="mt-2 space-y-1.5 text-sm">
+    <h3 class="text-h3">Cu avionul</h3>
+    <ul class="mt-5 border-t border-stone">
       {
         editorial.airports.map((a) => (
-          <li class="flex justify-between gap-3 border-b border-line pb-1.5 last:border-0">
+          <li class="flex items-baseline justify-between gap-3 border-b border-stone py-3.5">
             <span>
-              {a.name} <span class="text-muted">({a.iata})</span>
+              {a.name} <span class="label ml-1 text-gold-deep">{a.iata}</span>
             </span>
-            <span class="tabular-nums text-muted">{formatInt(a.km)} km</span>
+            <span class="tabular text-slate">{formatInt(a.km)} km</span>
           </li>
         ))
       }

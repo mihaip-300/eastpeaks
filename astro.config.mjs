@@ -9,6 +9,9 @@ export default defineConfig({
   site: process.env.PUBLIC_SITE_URL ?? 'https://eastpeaks.eu',
   output: 'static',
   trailingSlash: 'always',
+  // Astro 7 defaults to JSX-style whitespace (drops spaces across line breaks next to
+  // links: "tine.Cum funcționează"). HTML-aware compression keeps prose intact.
+  compressHTML: true,
   // Only /go/ renders on demand; everything else is prerendered HTML.
   adapter: cloudflare({ imageService: 'compile' }),
   // No Astro.session usage: skip the auto-provisioned SESSION KV namespace.
