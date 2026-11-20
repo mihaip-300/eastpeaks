@@ -385,7 +385,7 @@ ID-urile de afiliat vin din variabile de mediu. Până la aprobarea în rețele,
 - [x] Domeniul: `eastpeaks.eu`
 - [ ] Numele afișat al site-ului
 - [ ] Contul Cloudflare cu domeniul adăugat; `wrangler login` făcut local
-- [ ] Repository-ul GitHub (repo-ul git local există, pe `main`; lipsește remote-ul)
+- [x] Repository-ul GitHub: `github.com/mihaip-300/eastpeaks` (branch `main`)
 - [ ] WSL2 (Ubuntu) instalat, pentru pipeline
 - [ ] Google Sheet-ul cu prețuri, publicat ca CSV
 - [ ] ID-urile de afiliere, pe măsură ce vin aprobările (CJ/Booking, Awin, Stay22)
@@ -403,7 +403,7 @@ O sesiune Claude Code pe milestone. Fiecare se încheie cu `npm run check`, `npm
 - Astro 6 + Tailwind v4 + Preact + `@astrojs/cloudflare` + `@astrojs/sitemap` + Pagefind.
 - `Base.astro` cu header și footer în română; paginile legale goale; pagina 404.
 - `wrangler.jsonc`; deploy pe `*.workers.dev`.
-- Remote-ul GitHub pe repo-ul existent (`git init` și `.gitignore` sunt deja făcute).
+- Repo-ul GitHub (`mihaip-300/eastpeaks`), `.gitignore` și primul commit există deja; M1 pornește de pe `main`.
 - Scripturile npm din `CLAUDE.md`.
 
 **Acceptare:** site-ul gol e live pe `workers.dev`; `npm run check` și `npm run build` trec; o pagină de test cu `prerender = false` răspunde corect.
