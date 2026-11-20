@@ -1,0 +1,30 @@
+---
+import { breadcrumbJsonLd, jsonLd, type Crumb } from '../lib/seo';
+
+interface Props {
+  crumbs: Crumb[];
+}
+
+const { crumbs } = Astro.props;
+const all: Crumb[] = [{ name: 'Acasă', url: '/' }, ...crumbs];
+---
+
+<nav aria-label="Breadcrumb" class="text-sm text-muted">
+  <ol class="flex flex-wrap items-center gap-x-1.5">
+    {
+      all.map((c, i) => (
+        <li class="flex items-center gap-x-1.5">
+          {i > 0 && <span aria-hidden="true">›</span>}
+          {i < all.length - 1 ? (
+            <a href={c.url} class="text-muted">
+              {c.name}
+            </a>
+          ) : (
+            <span aria-current="page">{c.name}</span>
+          )}
+        </li>
+      ))
+    }
+  </ol>
+</nav>
+<script type="application/ld+json" set:html={jsonLd(breadcrumbJsonLd(all, Astro.site!))} />

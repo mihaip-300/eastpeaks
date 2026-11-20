@@ -1,0 +1,15 @@
+---
+// The only way to link to a partner (CLAUDE.md): /go/{partner}/{target}/?from={slug}.
+import type { HTMLAttributes } from 'astro/types';
+import { AFFILIATE_REL, affiliateHref } from '../../lib/affiliate';
+
+interface Props extends Omit<HTMLAttributes<'a'>, 'href' | 'rel' | 'target'> {
+  partner: string;
+  target: string;
+  from?: string;
+}
+
+const { partner, target, from, ...rest } = Astro.props;
+---
+
+<a href={affiliateHref(partner, target, from)} rel={AFFILIATE_REL} target="_blank" {...rest}><slot /></a>

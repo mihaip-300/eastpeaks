@@ -1,0 +1,36 @@
+---
+import { formatInt, formatKm, formatMeters } from '../../lib/format';
+import type { Resort } from '../../lib/resorts';
+
+interface Props {
+  resort: Resort;
+}
+
+const { resort } = Astro.props;
+const g = resort.generated;
+const season = resort.editorial?.season;
+const fmtSeason = (md: string) => {
+  const [m, d] = md.split('-').map(Number);
+  const months = ['ian', 'feb', 'mar', 'apr', 'mai', 'iun', 'iul', 'aug', 'sep', 'oct', 'nov', 'dec'];
+  return `${d} ${months[(m ?? 1) - 1]}`;
+};
+
+const facts = [
+  { label: 'Pârtii', value: formatKm(g.runs.km_total), hint: `${formatInt(g.runs.count)} pârtii în OpenStreetMap` },
+  { label: 'Altitudine', value: `${formatMeters(g.elevation_m.min)} – ${formatMeters(g.elevation_m.max)}`, hint: `${formatMeters(g.elevation_m.max - g.elevation_m.min)} diferență de nivel` },
+  { label: 'Lifturi', value: formatInt(g.lifts.count), hint: 'instalații pe cablu și teleschiuri' },
+  { label: 'Sezon', value: season ? `${fmtSeason(season.start)} – ${fmtSeason(season.end)}` : 'în curând', hint: 'aproximativ, depinde de zăpadă' },
+];
+---
+
+<dl class="grid grid-cols-2 gap-3 lg:grid-cols-4">
+  {
+    facts.map((f) => (
+      <div class="rounded-xl border border-line p-4">
+        <dt class="text-sm text-muted">{f.label}</dt>
+        <dd class="mt-1 text-xl font-semibold tabular-nums sm:text-2xl">{f.value}</dd>
+        <dd class="mt-0.5 text-xs text-muted">{f.hint}</dd>
+      </div>
+    ))
+  }
+</dl>

@@ -1,0 +1,28 @@
+{
+  "slug": "poiana-brasov",
+  "name": "Poiana Brașov",
+  "region": "Brașov",
+  "summary": "Cea mai cunoscută stațiune de schi din România, la 12 km de centrul Brașovului. Pârtiile coboară de pe Postăvarul, cu telegondolă și telecabine care pleacă direct din stațiune, și sunt potrivite atât pentru începători, cât și pentru schiorii avansați. Se combină ușor cu o seară în orașul vechi.",
+  "season": { "start": "12-15", "end": "03-31" },
+  "drive": {
+    "bucuresti": { "km": 187, "hours": 2.9, "road_costs_eur": 0 },
+    "cluj": { "km": 286, "hours": 4.7, "road_costs_eur": 0 },
+    "brasov": { "km": 11, "hours": 0.3, "road_costs_eur": 0 }
+  },
+  "airports": [
+    { "iata": "GHV", "name": "Brașov-Ghimbav", "km": 28 },
+    { "iata": "OTP", "name": "București Otopeni", "km": 158 }
+  ],
+  "accommodation_per_night_eur": { "budget": 70, "mid": 120, "premium": 220 },
+  "room_capacity": 2,
+  "rental_per_day_eur": { "adult": 25, "child": 18 },
+  "partners": { "booking": "poiana-brasov", "skiset": null, "transfer": null },
+  "photos": [],
+  "official_km": null,
+  "updated": "2026-11-20",
+  "verification": {
+    "status": "de-verificat",
+    "estimates": ["season", "accommodation_per_night_eur", "rental_per_day_eur"],
+    "notes": "Distanțe și timpi: OSRM, fără trafic și opriri. Costurile de drum presupun că ai deja rovinieta."
+  }
+}

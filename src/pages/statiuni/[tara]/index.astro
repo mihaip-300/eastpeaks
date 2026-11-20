@@ -1,0 +1,47 @@
+---
+import Breadcrumbs from '../../../components/Breadcrumbs.astro';
+import ResortCard from '../../../components/resort/ResortCard.astro';
+import { COUNTRIES, type Country } from '../../../data/countries';
+import Base from '../../../layouts/Base.astro';
+import { getResorts, type Resort } from '../../../lib/resorts';
+
+export async function getStaticPaths() {
+  const resorts = await getResorts();
+  return COUNTRIES.flatMap((country) => {
+    const inCountry = resorts.filter((r) => r.country.slug === country.slug);
+    return inCountry.length ? [{ params: { tara: country.slug }, props: { country, resorts: inCountry } }] : [];
+  });
+}
+
+interface Props {
+  country: Country;
+  resorts: Resort[];
+}
+
+const { country, resorts } = Astro.props;
+const names = resorts.map((r) => r.name).join(', ');
+---
+
+<Base
+  title={`Stațiuni de schi în ${country.name}`}
+  description={`Stațiunile de schi din ${country.name} (${names}): hărți ale pârtiilor, prețuri la skipass și cât faci cu mașina din România.`}
+>
+  <div class="mx-auto max-w-6xl px-4 py-8">
+    <Breadcrumbs
+      crumbs={[
+        { name: 'Stațiuni', url: '/statiuni/' },
+        { name: country.name, url: `/statiuni/${country.slug}/` },
+      ]}
+    />
+    <h1 class="mt-2 text-3xl font-bold tracking-tight">Stațiuni de schi în {country.name}</h1>
+    <ul class="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+      {
+        resorts.map((r) => (
+          <li>
+            <ResortCard resort={r} />
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</Base>

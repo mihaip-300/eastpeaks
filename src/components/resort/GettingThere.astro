@@ -1,0 +1,68 @@
+---
+import { formatEur, formatInt } from '../../lib/format';
+import type { Editorial } from '../../lib/resorts';
+
+interface Props {
+  editorial: Editorial;
+}
+
+const { editorial } = Astro.props;
+const CITY_LABEL = { bucuresti: 'București', cluj: 'Cluj-Napoca', brasov: 'Brașov' } as const;
+const drives = (Object.keys(CITY_LABEL) as (keyof typeof CITY_LABEL)[]).flatMap((k) => {
+  const d = editorial.drive[k];
+  return d ? [{ city: CITY_LABEL[k], ...d }] : [];
+});
+
+function hours(h: number): string {
+  const whole = Math.floor(h);
+  const min = Math.round(((h - whole) * 60) / 15) * 15;
+  const [hh, mm] = min === 60 ? [whole + 1, 0] : [whole, min];
+  return hh === 0 ? `${mm} min` : mm === 0 ? `${hh} h` : `${hh} h ${mm} min`;
+}
+---
+
+<div class="grid gap-6 sm:grid-cols-2">
+  <div>
+    <h3 class="font-semibold">Cu mașina</h3>
+    <table class="mt-2 w-full text-sm">
+      <thead>
+        <tr class="border-b border-line text-left text-muted">
+          <th class="py-2 pr-3 font-medium">Din</th>
+          <th class="py-2 pr-3 text-right font-medium">Distanță</th>
+          <th class="py-2 pr-3 text-right font-medium">Timp</th>
+          <th class="py-2 text-right font-medium">Taxe drum*</th>
+        </tr>
+      </thead>
+      <tbody>
+        {
+          drives.map((d) => (
+            <tr class="border-b border-line last:border-0">
+              <td class="py-2 pr-3">{d.city}</td>
+              <td class="py-2 pr-3 text-right tabular-nums">{formatInt(d.km)} km</td>
+              <td class="py-2 pr-3 text-right tabular-nums">~{hours(d.hours)}</td>
+              <td class="py-2 text-right tabular-nums">{d.road_costs_eur ? formatEur(d.road_costs_eur) : '–'}</td>
+            </tr>
+          ))
+        }
+      </tbody>
+    </table>
+    <p class="mt-2 text-xs text-muted">
+      * Dus-întors, pentru o mașină. Timpii sunt fără trafic și opriri; iarna, socotește mai mult.
+    </p>
+  </div>
+  <div>
+    <h3 class="font-semibold">Cu avionul</h3>
+    <ul class="mt-2 space-y-1.5 text-sm">
+      {
+        editorial.airports.map((a) => (
+          <li class="flex justify-between gap-3 border-b border-line pb-1.5 last:border-0">
+            <span>
+              {a.name} <span class="text-muted">({a.iata})</span>
+            </span>
+            <span class="tabular-nums text-muted">{formatInt(a.km)} km</span>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</div>

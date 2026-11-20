@@ -13,7 +13,10 @@
     "deploy": "npm run build && wrangler deploy",
     "types": "wrangler types",
     "pipeline": "docker compose -f pipeline/compose.yaml run --rm pipeline",
-    "tiles:upload": "node scripts/upload-tiles.mjs"
+    "tiles:upload": "node scripts/upload-tiles.mjs",
+    "prices": "node --env-file-if-exists=.env scripts/fetch-prices.ts",
+    "prebuild": "npm run prices",
+    "test": "node --test \"src/**/*.test.ts\""
   },
   "dependencies": {
     "@astrojs/cloudflare": "^14.4.9",

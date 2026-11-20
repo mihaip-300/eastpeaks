@@ -1,12 +1,14 @@
 ---
-import Base from '../layouts/Base.astro';
+import { getCollection } from 'astro:content';
+import ResortCard from '../components/resort/ResortCard.astro';
 import { SITE } from '../data/site';
+import Base from '../layouts/Base.astro';
+import { getResorts } from '../lib/resorts';
 
-// Placeholder list until M0 step D wires in data/generated + editorial content.
-const upcoming = [
-  { name: 'Poiana Brașov', country: 'România' },
-  { name: 'Bansko', country: 'Bulgaria' },
-];
+const resorts = await getResorts();
+const pairs = (await getCollection('comparatii'))
+  .map(({ data }) => ({ a: resorts.find((r) => r.slug === data.a), b: resorts.find((r) => r.slug === data.b) }))
+  .filter((p) => p.a && p.b);
 ---
 
 <Base
@@ -15,12 +17,10 @@ const upcoming = [
 >
   <section class="bg-brand text-white">
     <div class="mx-auto max-w-6xl px-4 py-14 sm:py-20">
-      <h1 class="max-w-3xl text-3xl font-bold tracking-tight text-balance sm:text-5xl">
-        Unde mergi la schi iarna asta?
-      </h1>
+      <h1 class="max-w-3xl text-3xl font-bold tracking-tight text-balance sm:text-5xl">Unde mergi la schi iarna asta?</h1>
       <p class="mt-4 max-w-2xl text-lg text-brand-soft">
-        Comparăm stațiunile din România, Balcani și Austria pe date: kilometri de pârtie, pante,
-        prețul skipass-ului și cât faci cu mașina din București, Cluj sau Brașov.
+        Comparăm stațiunile din România, Balcani și Austria pe date: kilometri de pârtie, pante, prețul skipass-ului și
+        cât faci cu mașina din București, Cluj sau Brașov.
       </p>
       <a
         href="/statiuni/"
@@ -32,17 +32,32 @@ const upcoming = [
   </section>
 
   <section class="mx-auto max-w-6xl px-4 py-12">
-    <h2 class="text-xl font-semibold">Primele stațiuni</h2>
-    <p class="mt-1 text-muted">Paginile cu hartă și calculator apar în curând.</p>
-    <ul class="mt-6 grid gap-4 sm:grid-cols-2">
+    <h2 class="text-2xl font-semibold tracking-tight">Stațiuni</h2>
+    <ul class="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
       {
-        upcoming.map((r) => (
-          <li class="rounded-xl border border-line p-5">
-            <p class="text-lg font-semibold">{r.name}</p>
-            <p class="text-sm text-muted">{r.country} · în curând</p>
+        resorts.map((r) => (
+          <li>
+            <ResortCard resort={r} />
           </li>
         ))
       }
     </ul>
+
+    {
+      pairs.length > 0 && (
+        <>
+          <h2 class="mt-12 text-2xl font-semibold tracking-tight">Comparații</h2>
+          <ul class="mt-4 space-y-2">
+            {pairs.map(({ a, b }) => (
+              <li>
+                <a href={`/compara/${a!.slug}-vs-${b!.slug}/`}>
+                  {a!.name} sau {b!.name}?
+                </a>
+              </li>
+            ))}
+          </ul>
+        </>
+      )
+    }
   </section>
 </Base>

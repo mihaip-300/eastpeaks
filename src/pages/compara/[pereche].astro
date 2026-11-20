@@ -1,0 +1,117 @@
+---
+import { getCollection } from 'astro:content';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import { DIFFICULTIES } from '../../data/pistes';
+import Base from '../../layouts/Base.astro';
+import { formatEur, formatInt, formatKm, formatMeters, formatPct } from '../../lib/format';
+import { getResorts, type Resort } from '../../lib/resorts';
+
+// Only the curated pairs in src/content/comparatii.json, never all combinations.
+export async function getStaticPaths() {
+  const [pairs, resorts] = await Promise.all([getCollection('comparatii'), getResorts()]);
+  return pairs.flatMap(({ data }) => {
+    const a = resorts.find((r) => r.slug === data.a);
+    const b = resorts.find((r) => r.slug === data.b);
+    if (!a || !b) {
+      console.warn(`[compara] ${data.id}: missing resort, page skipped`);
+      return [];
+    }
+    return [{ params: { pereche: `${a.slug}-vs-${b.slug}` }, props: { a, b } }];
+  });
+}
+
+interface Props {
+  a: Resort;
+  b: Resort;
+}
+
+const { a, b } = Astro.props;
+const title = `${a.name} sau ${b.name}?`;
+
+type Row = { label: string; get: (r: Resort) => string; better?: (r: Resort) => number | null };
+const steepest = (r: Resort) => r.generated.steepest_runs[0];
+const rows: Row[] = [
+  { label: 'Țară', get: (r) => r.country.name },
+  { label: 'Kilometri de pârtie (OSM)', get: (r) => formatKm(r.generated.runs.km_total), better: (r) => r.generated.runs.km_total },
+  { label: 'Altitudine maximă', get: (r) => formatMeters(r.generated.elevation_m.max), better: (r) => r.generated.elevation_m.max },
+  { label: 'Diferență de nivel', get: (r) => formatMeters(r.generated.elevation_m.max - r.generated.elevation_m.min), better: (r) => r.generated.elevation_m.max - r.generated.elevation_m.min },
+  { label: 'Lifturi', get: (r) => formatInt(r.generated.lifts.count), better: (r) => r.generated.lifts.count },
+  ...DIFFICULTIES.filter((d) => d.key !== 'unknown').map((d) => ({
+    label: `Pârtii: ${d.label.toLowerCase()}`,
+    get: (r: Resort) => formatKm(r.generated.runs.km_by_difficulty[d.key] ?? 0),
+  })),
+  {
+    label: 'Cea mai abruptă pârtie',
+    get: (r) => {
+      const s = steepest(r);
+      return s ? `${s.name ?? 'fără nume'}, ${formatPct(s.max_gradient_100m_pct)}` : '–';
+    },
+  },
+  {
+    label: 'Skipass adult, 1 zi',
+    get: (r) => (r.priceEur?.adult_1d != null ? `≈ ${formatEur(r.priceEur.adult_1d)}` : 'nedisponibil'),
+    better: (r) => (r.priceEur?.adult_1d != null ? -r.priceEur.adult_1d : null),
+  },
+  {
+    label: 'Din București',
+    get: (r) => {
+      const d = r.editorial?.drive.bucuresti;
+      return d ? `${formatInt(d.km)} km, ~${d.hours.toLocaleString('ro-RO')} h` : '–';
+    },
+    better: (r) => (r.editorial?.drive.bucuresti ? -r.editorial.drive.bucuresti.km : null),
+  },
+];
+
+function winner(row: Row): 'a' | 'b' | null {
+  if (!row.better) return null;
+  const va = row.better(a);
+  const vb = row.better(b);
+  if (va == null || vb == null || va === vb) return null;
+  return va > vb ? 'a' : 'b';
+}
+---
+
+<Base
+  title={`${a.name} vs ${b.name}: comparație`}
+  description={`${a.name} sau ${b.name}? Comparăm kilometrii de pârtie, altitudinea, pantele, prețul skipass-ului și drumul din România.`}
+>
+  <div class="mx-auto max-w-4xl px-4 py-8">
+    <Breadcrumbs
+      crumbs={[
+        { name: 'Stațiuni', url: '/statiuni/' },
+        { name: `${a.name} vs ${b.name}`, url: `/compara/${a.slug}-vs-${b.slug}/` },
+      ]}
+    />
+    <h1 class="mt-2 text-3xl font-bold tracking-tight">{title}</h1>
+    <p class="mt-3 text-muted">Comparație pe date. Valoarea mai bună pe fiecare rând e marcată.</p>
+
+    <div class="-mx-4 mt-6 overflow-x-auto px-4">
+      <table class="w-full min-w-[32rem] text-sm">
+        <thead>
+          <tr class="border-b border-line text-left">
+            <th class="py-2 pr-3 font-medium text-muted"><span class="sr-only">Criteriu</span></th>
+            <th class="py-2 pr-3 text-lg font-semibold"><a href={a.url}>{a.name}</a></th>
+            <th class="py-2 text-lg font-semibold"><a href={b.url}>{b.name}</a></th>
+          </tr>
+        </thead>
+        <tbody>
+          {
+            rows.map((row) => {
+              const w = winner(row);
+              return (
+                <tr class="border-b border-line">
+                  <th scope="row" class="py-2.5 pr-3 text-left font-normal text-muted">{row.label}</th>
+                  <td class:list={['py-2.5 pr-3 tabular-nums', w === 'a' && 'font-semibold text-accent']}>{row.get(a)}</td>
+                  <td class:list={['py-2.5 tabular-nums', w === 'b' && 'font-semibold text-accent']}>{row.get(b)}</td>
+                </tr>
+              );
+            })
+          }
+        </tbody>
+      </table>
+    </div>
+    <p class="mt-4 text-xs text-muted">
+      Kilometrii și pantele vin din OpenStreetMap și Copernicus DEM; cifrele oficiale ale stațiunilor pot fi mai mari.
+    </p>
+  </div>
+</Base>

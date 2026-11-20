@@ -1,0 +1,32 @@
+---
+import { DIFFICULTIES } from '../../data/pistes';
+import { formatKm } from '../../lib/format';
+import type { GeneratedResort } from '../../lib/generated';
+
+interface Props {
+  generated: GeneratedResort;
+}
+
+const { generated } = Astro.props;
+const total = generated.runs.km_total || 1;
+const rows = DIFFICULTIES.map((d) => ({ ...d, km: generated.runs.km_by_difficulty[d.key] ?? 0 })).filter((d) => d.km > 0);
+---
+
+<div>
+  <div class="flex h-3 overflow-hidden rounded-full bg-snow" role="img" aria-label="Kilometri de pârtie pe dificultate">
+    {rows.map((r) => <span style={{ width: `${(r.km / total) * 100}%`, background: r.color }} />)}
+  </div>
+  <ul class="mt-3 flex flex-wrap gap-x-6 gap-y-1.5 text-sm">
+    {
+      rows.map((r) => (
+        <li class="flex items-center gap-2">
+          <span class="flex items-center gap-2">
+            <span class="inline-block h-2.5 w-2.5 rounded-full" style={{ background: r.color }} />
+            {r.label}
+          </span>
+          <span class="tabular-nums text-muted">{formatKm(r.km)}</span>
+        </li>
+      ))
+    }
+  </ul>
+</div>

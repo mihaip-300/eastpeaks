@@ -1,0 +1,31 @@
+{
+  "source": "manual",
+  "generated_at": "2026-11-20T00:00:00Z",
+  "note": "Completat de mână până există Google Sheet-ul (HANDOFF 4.3). Valorile sunt de verificat.",
+  "prices": [
+    {
+      "slug": "poiana-brasov",
+      "currency": "RON",
+      "adult_1d": 240,
+      "adult_6d": 900,
+      "child_1d": 140,
+      "child_6d": 480,
+      "season": "2025/26",
+      "source_url": "https://www.brasovcity.ro/vino-la-ski/tarife-transport-instalatii-pe-cablu",
+      "checked_at": "2026-11-20",
+      "note": "Tarifele 2026/27 nu sunt încă publicate; acestea sunt cele din sezonul 2025/26."
+    },
+    {
+      "slug": "bansko",
+      "currency": "EUR",
+      "adult_1d": null,
+      "adult_6d": null,
+      "child_1d": null,
+      "child_6d": null,
+      "season": "2026/27",
+      "source_url": "https://www.banskoski.com/bg/page/ceni",
+      "checked_at": "2026-11-20",
+      "note": "Operatorul a publicat doar abonamentul de sezon (870 € adult); prețurile pe zi nu sunt încă publice."
+    }
+  ]
+}

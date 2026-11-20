@@ -175,7 +175,7 @@ Valorile de mai sus sunt doar exemple de format; pipeline-ul le calculează.
 
 ### 4.3 Prețuri: Google Sheet → `data/prices.json`
 
-Un rând pe stațiune, coloane: `slug, currency, adult_1d, adult_6d, child_1d, child_6d, source_url, checked_at`. `npm run prices` citește CSV-ul publicat (`PRICES_SHEET_CSV_URL`), îl validează cu Zod și scrie JSON-ul. Rulează automat înainte de build; dacă Sheet-ul nu se poate citi, rămâne `data/prices.json` din Git și apare un avertisment.
+Un rând pe stațiune, coloane: `slug, currency, adult_1d, adult_6d, child_1d, child_6d, season, source_url, checked_at, note` (`season` și `note` sunt opționale; un preț lipsă rămâne gol și apare „nedisponibil”). `npm run prices` citește CSV-ul publicat (`PRICES_SHEET_CSV_URL`), îl validează cu Zod și scrie JSON-ul. Rulează automat înainte de build; dacă Sheet-ul nu se poate citi, rămâne `data/prices.json` din Git și apare un avertisment.
 
 Prețurile sunt în moneda locală: `currency` e unul dintre `EUR`, `RON`, `RSD`, `BAM`, `MKD` (Bulgaria și Muntenegru folosesc EUR; Bulgaria din 1 ianuarie 2026). `constants.ts` conține cursurile spre EUR, cursul EUR→RON și data la care au fost actualizate.
 

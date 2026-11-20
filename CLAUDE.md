@@ -30,7 +30,8 @@ npm run build      # build static + index Pagefind
 npm run check      # astro check + tsc --noEmit
 npm run preview    # build servit local prin wrangler
 npm run deploy     # build + wrangler deploy
-npm run prices     # Google Sheet (CSV) → data/prices.json
+npm run prices     # Google Sheet (CSV) → data/prices.json (rulează automat înainte de build)
+npm test           # node --test pentru src/**/*.test.ts (calculatorul)
 
 # Pipeline, în Docker (prima rulare construiește imaginea)
 npm run pipeline -- make all        # download + process + tiles + previews + qa
