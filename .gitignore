@@ -1,0 +1,27 @@
+# Node / Astro
+node_modules/
+dist/
+.astro/
+.wrangler/
+
+# Secrets (affiliate IDs, tokens) — use .dev.vars or `wrangler secret`
+.dev.vars
+.dev.vars.*
+.env
+.env.*
+
+# Pipeline: raw downloads, DEM tiles and build outputs
+# (data/generated/, public/maps/ and data/prices.json ARE committed)
+pipeline/cache/
+pipeline/out/
+__pycache__/
+*.pyc
+.venv/
+.pytest_cache/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/*
+!.vscode/extensions.json
