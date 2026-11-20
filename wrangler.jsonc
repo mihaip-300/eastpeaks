@@ -17,7 +17,7 @@
     {
       "binding": "DB",
       "database_name": "eastpeaks-clicks",
-      "database_id": "00000000-0000-0000-0000-000000000000",
+      "database_id": "14b09d82-bbd2-4e1b-8928-c539ff1f0315",
       "migrations_dir": "migrations"
     }
   ]

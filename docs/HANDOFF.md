@@ -400,7 +400,7 @@ ID-urile de afiliat vin din variabile de mediu. Până la aprobarea în rețele,
 
 O sesiune Claude Code pe milestone. Fiecare se încheie cu `npm run check`, `npm run build` și un commit. Estimările sunt ore de dezvoltare, fără scrierea textelor.
 
-### M0: Prima versiune, cap-coadă, cu Poiana Brașov și Bansko (în lucru)
+### M0: Prima versiune, cap-coadă, cu Poiana Brașov și Bansko (gata, 20 noiembrie 2026)
 
 Înainte de M1–M5 pentru toate stațiunile, construim un drum complet pentru două stațiuni, ca să validăm pipeline-ul, harta și pagina înainte de a scala. Ordinea:
 
@@ -413,6 +413,15 @@ O sesiune Claude Code pe milestone. Fiecare se încheie cu `npm run check`, `npm
 Rămân pentru după: paginile de țară, comparațiile, ghidurile, `OverviewMap`, Pagefind, domeniul propriu, Web Analytics.
 
 **Acceptare:** cele două pagini de stațiune sunt live pe `workers.dev`, cu harta, statisticile verificate de Mike față de datele oficiale, calculatorul și `/go/` cu click-uri în D1.
+
+**Stare:** live pe `https://eastpeaks.mihai-prajeu.workers.dev` (noindex). R2: bucketul `pistes`, URL public r2.dev. D1: `eastpeaks-clicks`. Deschise:
+
+- Verificarea de către Mike a statisticilor și a datelor marcate „de verificat” (prețuri 2026/27, cazare, închiriere, taxe de drum, sezonul Poiana).
+- Prețurile pe zi pentru Bansko (operatorul publică doar abonamentul de sezon).
+- Partener de transferuri (GetYourGuide nu s-a putut verifica automat).
+- Etichetele hărții de bază în alfabet latin pentru Bulgaria.
+- Numele afișat al site-ului (acum „East Peaks”, provizoriu).
+
 
 ### M1: Schelet (~8 h)
 
