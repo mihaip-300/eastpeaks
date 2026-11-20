@@ -11,5 +11,14 @@
     "directory": "./dist/client",
     "not_found_handling": "404-page"
   },
-  "observability": { "enabled": true }
+  "observability": { "enabled": true },
+  // Affiliate clicks only (CLAUDE.md: no content in a database). Migrations in migrations/.
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "eastpeaks-clicks",
+      "database_id": "00000000-0000-0000-0000-000000000000",
+      "migrations_dir": "migrations"
+    }
+  ]
 }

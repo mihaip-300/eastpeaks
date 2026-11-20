@@ -32,6 +32,8 @@ npm run preview    # build servit local prin wrangler
 npm run deploy     # build + wrangler deploy
 npm run prices     # Google Sheet (CSV) → data/prices.json (rulează automat înainte de build)
 npm test           # node --test pentru src/**/*.test.ts (calculatorul)
+npx wrangler d1 migrations apply eastpeaks-clicks --local    # sau --remote; tabela clicks
+npx wrangler d1 execute eastpeaks-clicks --remote --command "SELECT * FROM clicks ORDER BY id DESC LIMIT 20"
 
 # Pipeline, în Docker (prima rulare construiește imaginea)
 npm run pipeline -- make all        # download + process + tiles + previews + qa

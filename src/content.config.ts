@@ -22,10 +22,14 @@ const statiuni = defineCollection({
     accommodation_per_night_eur: z.object({ budget: eur, mid: eur, premium: eur }).partial(),
     room_capacity: z.number().int().positive().default(2),
     rental_per_day_eur: z.object({ adult: eur, child: eur }).partial(),
+    // Target keys in src/data/partners.ts; null when the partner doesn't cover the resort.
     partners: z.object({
       booking: slug.nullable(),
-      skiset: slug.nullable(),
-      transfer: slug.nullable(),
+      skiset: slug.nullable().default(null),
+      snowrental: slug.nullable().default(null),
+      transfer: slug.nullable().default(null),
+      /** Car rental at these airports (lowercase IATA). */
+      car: z.array(z.string().regex(/^[a-z]{3}$/)).default([]),
     }),
     photos: z.array(
       z.object({ src: z.string(), alt: z.string().min(3), credit: z.string(), license: z.string() }),

@@ -3,26 +3,69 @@
   "name": "Bansko",
   "region": "Blagoevgrad (Munții Pirin)",
   "summary": "Cea mai mare stațiune de schi din Bulgaria, în Munții Pirin, cu telegondola care pornește direct din oraș. Domeniul urcă până la peste 2.500 m, cu pârtii lungi, multe de nivel ușor și mediu, iar orașul vechi are multe restaurante și cazări la prețuri bune.",
-  "season": { "start": "12-01", "end": "04-11" },
+  "season": {
+    "start": "12-01",
+    "end": "04-11"
+  },
   "drive": {
-    "bucuresti": { "km": 515, "hours": 7.5, "road_costs_eur": 18 },
-    "cluj": { "km": 969, "hours": 12.1, "road_costs_eur": 20 },
-    "brasov": { "km": 721, "hours": 10.2, "road_costs_eur": 18 }
+    "bucuresti": {
+      "km": 515,
+      "hours": 7.5,
+      "road_costs_eur": 18
+    },
+    "cluj": {
+      "km": 969,
+      "hours": 12.1,
+      "road_costs_eur": 20
+    },
+    "brasov": {
+      "km": 721,
+      "hours": 10.2,
+      "road_costs_eur": 18
+    }
   },
   "airports": [
-    { "iata": "SOF", "name": "Sofia", "km": 177 },
-    { "iata": "PDV", "name": "Plovdiv", "km": 172 }
+    {
+      "iata": "SOF",
+      "name": "Sofia",
+      "km": 177
+    },
+    {
+      "iata": "PDV",
+      "name": "Plovdiv",
+      "km": 172
+    }
   ],
-  "accommodation_per_night_eur": { "budget": 50, "mid": 90, "premium": 170 },
+  "accommodation_per_night_eur": {
+    "budget": 50,
+    "mid": 90,
+    "premium": 170
+  },
   "room_capacity": 2,
-  "rental_per_day_eur": { "adult": 25, "child": 18 },
-  "partners": { "booking": "bansko", "skiset": null, "transfer": null },
+  "rental_per_day_eur": {
+    "adult": 25,
+    "child": 18
+  },
+  "partners": {
+    "booking": "bansko",
+    "skiset": "bansko",
+    "snowrental": "bansko",
+    "transfer": null,
+    "car": [
+      "sof",
+      "pdv"
+    ]
+  },
   "photos": [],
   "official_km": null,
   "updated": "2026-11-20",
   "verification": {
     "status": "de-verificat",
-    "estimates": ["drive.*.road_costs_eur", "accommodation_per_night_eur", "rental_per_day_eur"],
+    "estimates": [
+      "drive.*.road_costs_eur",
+      "accommodation_per_night_eur",
+      "rental_per_day_eur"
+    ],
     "notes": "Sezonul 2026/27: 01.12.2026–11.04.2027, după banskoski.com. Distanțe și timpi: OSRM, fără trafic și opriri. Costurile de drum: vinieta Bulgaria și taxele de pod la Dunăre, dus-întors, estimate."
   }
 }

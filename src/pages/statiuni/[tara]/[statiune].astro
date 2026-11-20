@@ -1,6 +1,7 @@
 ---
 import { PUBLIC_PMTILES_URL } from 'astro:env/client';
 import Breadcrumbs from '../../../components/Breadcrumbs.astro';
+import AffiliateBlocks from '../../../components/affiliate/AffiliateBlocks.astro';
 import CostCalculator from '../../../components/calculator/CostCalculator';
 import ResortMap from '../../../components/map/ResortMap';
 import GettingThere from '../../../components/resort/GettingThere.astro';
@@ -109,6 +110,17 @@ const osmDate = formatDate(g.sources.openskimap_date);
           <h2 id="cum-ajungi" class="text-2xl font-semibold tracking-tight">Cum ajungi</h2>
           <div class="mt-4">
             <GettingThere editorial={e} />
+          </div>
+        </section>
+      )
+    }
+
+    {
+      e && (
+        <section class="mt-12" aria-labelledby="rezervari">
+          <h2 id="rezervari" class="text-2xl font-semibold tracking-tight">Cazare, echipament și mașină</h2>
+          <div class="mt-4">
+            <AffiliateBlocks resort={resort} />
           </div>
         </section>
       )
