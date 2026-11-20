@@ -37,7 +37,7 @@ Milestone-urile M1–M6 din secțiunea 11: schelet, pipeline de date, hartă, pa
 
 | Decizie | Motiv |
 | --- | --- |
-| Astro 6 static + o singură rută dinamică (`/go/`) | Site de conținut: HTML generat la build, rapid, fără server |
+| Astro 7 static + o singură rută dinamică (`/go/`) | Site de conținut: HTML generat la build, rapid, fără server |
 | Cloudflare Workers cu static assets, R2, D1 | Gratuit la volumul MVP; R2 nu taxează traficul de ieșire |
 | MapLibre + PMTiles pe R2 | Fără server de tile-uri; browserul citește doar bucățile de care are nevoie |
 | OpenFreeMap ca hartă de bază | Fără cheie API și fără limită de afișări; uz comercial permis, cu atribuire |
@@ -46,7 +46,7 @@ Milestone-urile M1–M6 din secțiunea 11: schelet, pipeline de date, hartă, pa
 | Datele în fișiere, nu în bază de date | Conținutul se schimbă o dată pe sezon |
 | Fără WordPress, Next.js, Mapbox, Google Maps, GA4 | Vezi documentul de stack, secțiunea „Ce am exclus” |
 
-**Cerințe locale (Windows):** Node.js 22+ (Astro 6) și Wrangler în Windows; Python 3.12, tippecanoe, `make` și GDAL (vine cu Rasterio prin wheel) în **WSL2 (Ubuntu)**. tippecanoe nu rulează nativ pe Windows.
+**Cerințe locale (Windows):** Node.js 22.23+ (Astro 7) și Wrangler în Windows; Python 3.12, tippecanoe, `make` și GDAL în imaginea Docker din `pipeline/Dockerfile` (Docker Desktop). tippecanoe nu rulează nativ pe Windows.
 
 ---
 
@@ -328,7 +328,7 @@ Verifică formularea curentă în licența fiecărei surse; textele de mai jos s
 2. Construiește URL-ul final și adaugă identificatorul paginii (`?from=`) în parametrul de tracking al rețelei: `sid` la CJ, `clickref` la Awin, label sau `campaign` acolo unde se aplică. Verifică parametrul exact în documentația fiecărei rețele.
 3. Răspunde cu 302, `Cache-Control: no-store`, `X-Robots-Tag: noindex`.
 4. Scrie click-ul în D1 prin `ctx.waitUntil` (nu întârzie redirectul). Sari peste boți (user-agent).
-5. Accesezi binding-urile prin API-ul Cloudflare din Astro 6 (`cloudflare:workers`); verifică forma exactă în documentația adapterului.
+5. Cu adapterul v14: binding-ul D1 vine din `import { env } from 'cloudflare:workers'`, `waitUntil` din `locals.cfContext`, țara din `request.cf`. `Astro.locals.runtime` nu mai există.
 
 ### 8.2 Tabela D1 (`migrations/0001_clicks.sql`)
 
@@ -386,7 +386,8 @@ ID-urile de afiliat vin din variabile de mediu. Până la aprobarea în rețele,
 - [ ] Numele afișat al site-ului
 - [ ] Contul Cloudflare cu domeniul adăugat; `wrangler login` făcut local
 - [x] Repository-ul GitHub: `github.com/mihaip-300/eastpeaks` (branch `main`)
-- [ ] WSL2 (Ubuntu) instalat, pentru pipeline
+- [ ] Docker Desktop pornit, pentru pipeline
+- [ ] API token Cloudflare pentru proiect, în `.env` (vezi CLAUDE.md, „Contul Cloudflare”)
 - [ ] Google Sheet-ul cu prețuri, publicat ca CSV
 - [ ] ID-urile de afiliere, pe măsură ce vin aprobările (CJ/Booking, Awin, Stay22)
 - [ ] Confirmarea listei de stațiuni din 5.1
@@ -398,9 +399,23 @@ ID-urile de afiliat vin din variabile de mediu. Până la aprobarea în rețele,
 
 O sesiune Claude Code pe milestone. Fiecare se încheie cu `npm run check`, `npm run build` și un commit. Estimările sunt ore de dezvoltare, fără scrierea textelor.
 
+### M0: Prima versiune, cap-coadă, cu Poiana Brașov și Bansko (în lucru)
+
+Înainte de M1–M5 pentru toate stațiunile, construim un drum complet pentru două stațiuni, ca să validăm pipeline-ul, harta și pagina înainte de a scala. Ordinea:
+
+- **A. Schelet:** partea de M1 fără Pagefind; deploy pe `*.workers.dev`, pe contul proiectului.
+- **B. Pipeline:** M2 pentru 2 stațiuni, în Docker; PMTiles pe R2.
+- **C. Harta:** `ResortMap.tsx` (M3), fără `OverviewMap`.
+- **D. Pagina de stațiune și calculatorul:** M4 pentru cele 2 stațiuni. Datele editoriale și `prices.json` se completează de mână, cu sursă și marcate „de verificat”, până există Google Sheet-ul.
+- **E. Afilierea:** M5, cu URL-urile simple ale partenerilor (fără ID-uri de afiliat).
+
+Rămân pentru după: paginile de țară, comparațiile, ghidurile, `OverviewMap`, Pagefind, domeniul propriu, Web Analytics.
+
+**Acceptare:** cele două pagini de stațiune sunt live pe `workers.dev`, cu harta, statisticile verificate de Mike față de datele oficiale, calculatorul și `/go/` cu click-uri în D1.
+
 ### M1: Schelet (~8 h)
 
-- Astro 6 + Tailwind v4 + Preact + `@astrojs/cloudflare` + `@astrojs/sitemap` + Pagefind.
+- Astro 7 + Tailwind v4 + Preact + `@astrojs/cloudflare` + `@astrojs/sitemap` + Pagefind.
 - `Base.astro` cu header și footer în română; paginile legale goale; pagina 404.
 - `wrangler.jsonc`; deploy pe `*.workers.dev`.
 - Repo-ul GitHub (`mihaip-300/eastpeaks`), `.gitignore` și primul commit există deja; M1 pornește de pe `main`.
@@ -447,7 +462,7 @@ Lipește asta în prima sesiune, cu `CLAUDE.md` în rădăcină și acest fișie
 ```
 Citește CLAUDE.md și docs/HANDOFF.md. Lucrăm la M1.
 
-1. Înainte de cod, verifică în documentația curentă: Astro 6 (instalare, output static
+1. Înainte de cod, verifică în documentația curentă: Astro 7 (instalare, output static
    cu o rută prerender = false), adapterul @astrojs/cloudflare, Tailwind CSS v4 cu Astro,
    integrarea Preact, Pagefind cu Astro și configul wrangler pentru static assets + D1.
 2. Fă un plan scurt pentru M1: fișiere, dependențe, comenzi. Așteaptă confirmarea mea.

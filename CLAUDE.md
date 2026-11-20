@@ -10,14 +10,14 @@ Planul complet, deciziile și milestone-urile sunt în `docs/HANDOFF.md`. Citeș
 
 | Strat | Alegere |
 | --- | --- |
-| Framework | Astro 6, `output: 'static'`. Adapterul `@astrojs/cloudflare` există doar pentru ruta `/go/` (`export const prerender = false`) |
+| Framework | Astro 7, `output: 'static'`. Adapterul `@astrojs/cloudflare` există doar pentru ruta `/go/` (`export const prerender = false`) |
 | Stil | Tailwind CSS v4 |
 | Insule interactive | Preact, încărcate cu `client:visible` sau la click |
 | Hartă | MapLibre GL JS + `pmtiles` (protocolul `pmtiles://`) |
 | Hartă de bază | OpenFreeMap, stilul `positron` (`https://tiles.openfreemap.org/styles/positron`) |
 | Relief | Mapterhorn (PMTiles terrarium); AWS Terrain Tiles ca rezervă |
 | Pârtii și lifturi | OpenSkiMap / OSM → `pistes-<YYYYMMDD>.pmtiles` pe Cloudflare R2 |
-| Pipeline de date | Python 3.12 în `pipeline/`: GeoPandas, Shapely, Rasterio, pyproj, tippecanoe |
+| Pipeline de date | Python 3.12 în `pipeline/`, rulat în Docker: GeoPandas, Shapely, Rasterio, pyproj, tippecanoe |
 | Hosting | Cloudflare Workers (static assets) + R2 + D1 |
 | Căutare | Pagefind |
 | Analytics | Cloudflare Web Analytics (fără cookie-uri) |
@@ -44,7 +44,7 @@ pytest
 
 Scripturile se creează în M1 și M2. Ține lista de mai sus la zi când le schimbi.
 
-**Mediul local e Windows.** Comenzile `npm` merg în PowerShell. Pipeline-ul (`make`, tippecanoe, GDAL) rulează în **WSL2 (Ubuntu)**, nu nativ pe Windows; Python 3.12 și tippecanoe se instalează în WSL. Nu scrie scripturi de pipeline care depind de PowerShell.
+**Mediul local e Windows.** Comenzile `npm` merg în PowerShell. Pipeline-ul (Python 3.12, GDAL, tippecanoe, `make`) rulează **în Docker**, din imaginea definită în `pipeline/Dockerfile`, pentru că tippecanoe nu rulează nativ pe Windows. Docker Desktop trebuie să fie pornit. Nu scrie scripturi de pipeline care depind de PowerShell.
 
 ## Structura
 
@@ -78,8 +78,9 @@ pipeline/             resorts.yaml, src/, tests/, Makefile
 - **Atribuirile rămân vizibile** pe hartă și pe `/despre/date`: OSM/ODbL, OpenFreeMap, Copernicus DEM (cu textul exact din HANDOFF 5.4), ESA WorldCover, sursa de relief. Datele de pârtii derivate din OSM se oferă sub ODbL (HANDOFF 5.4).
 - **Fără date personale în D1:** nu salva IP-uri.
 - **Secretele** și ID-urile de afiliere stau în `.dev.vars` sau `wrangler secret`, niciodată în Git.
+- **Contul Cloudflare.** Proiectul folosește un API token propriu (`CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID`) din `.env`, pe care Wrangler îl citește automat; `account_id` e fixat și în `wrangler.jsonc`. Pe mașină poate fi logat alt cont Cloudflare: nu folosi `wrangler login`/`logout` și nu face deploy fără tokenul proiectului.
 - **Dependențe noi** doar cu o justificare scurtă în commit; preferă ce oferă platforma.
-- **API-uri incerte** (Astro 6, Wrangler, MapLibre, pmtiles): verifică documentația curentă înainte să scrii cod.
+- **API-uri incerte** (Astro 7, Wrangler, MapLibre, pmtiles): verifică documentația curentă înainte să scrii cod.
 
 ## Culorile pârtiilor (standard european)
 
