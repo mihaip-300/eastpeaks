@@ -414,7 +414,7 @@ Rămân pentru după: paginile de țară, comparațiile, ghidurile, `OverviewMap
 
 **Acceptare:** cele două pagini de stațiune sunt live pe `workers.dev`, cu harta, statisticile verificate de Mike față de datele oficiale, calculatorul și `/go/` cu click-uri în D1.
 
-**Stare:** live pe `https://eastpeaks.mihai-prajeu.workers.dev` (noindex). R2: bucketul `pistes`, URL public r2.dev. D1: `eastpeaks-clicks`. Deschise:
+**Stare:** live pe `https://eastpeaks.mihai-prajeu.workers.dev` (noindex). Designul EastPeaks (`DESIGN.md`: brand, tokenuri, pagini noi `/harta/`, `/conditii/`, `/calculator-cost-schi/`) e live din 20 noiembrie 2026; `/conditii/` rămâne cu linkuri spre rapoartele oficiale până la o sursă de date reală. R2: bucketul `pistes`, URL public r2.dev. D1: `eastpeaks-clicks`. Deschise:
 
 - Verificarea de către Mike a statisticilor și a datelor marcate „de verificat” (prețuri 2026/27, cazare, închiriere, taxe de drum, sezonul Poiana).
 - Prețurile pe zi pentru Bansko (operatorul publică doar abonamentul de sezon).

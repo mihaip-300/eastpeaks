@@ -116,9 +116,19 @@ export default function ResortMap({ name, slug, bbox, preview, pmtilesUrl }: Pro
       <div class="relative overflow-hidden rounded-lg border border-stone bg-stone/50">
         <img src={preview} alt={`Harta pârtiilor din ${name}`} width={800} height={500} loading="lazy" decoding="async" class="aspect-[8/5] w-full object-cover" />
         <div class="absolute inset-0 flex flex-col items-center justify-center gap-3">
-          <button type="button" onClick={() => setActive(true)} class="btn btn-primary">
+          {/* A real link until the island hydrates (client:visible): an early click opens the
+              full-screen map instead of doing nothing; once hydrated it opens the map inline. */}
+          <a
+            href={`/harta/?statiune=${slug}`}
+            onClick={(e) => {
+              e.preventDefault();
+              setActive(true);
+            }}
+            class="btn btn-primary"
+            role="button"
+          >
             Deschide harta interactivă
-          </button>
+          </a>
           <a href={`/harta/?statiune=${slug}`} class="glass rounded-sm px-3 py-1.5 text-sm text-ivory no-underline">
             sau pe tot ecranul <span aria-hidden="true">→</span>
           </a>
