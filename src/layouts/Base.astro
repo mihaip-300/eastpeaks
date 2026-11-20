@@ -1,0 +1,102 @@
+---
+import '../styles/global.css';
+import { FOOTER_LINKS, NAV, SITE } from '../data/site';
+
+interface Props {
+  title: string;
+  description: string;
+  /** Force noindex on this page even in production. */
+  noindex?: boolean;
+}
+
+const { title, description, noindex = false } = Astro.props;
+const fullTitle = title === SITE.name ? title : `${title} | ${SITE.name}`;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+// Previews (workers.dev, branches) stay out of search engines until the
+// production build sets PUBLIC_INDEXING=true.
+const indexing = import.meta.env.PUBLIC_INDEXING === 'true';
+const year = new Date().getFullYear();
+const path = Astro.url.pathname;
+---
+
+<!doctype html>
+<html lang="ro">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    {(!indexing || noindex) && <meta name="robots" content="noindex" />}
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="ro_RO" />
+    <meta property="og:site_name" content={SITE.name} />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <slot name="head" />
+  </head>
+  <body class="flex min-h-dvh flex-col">
+    <a
+      href="#continut"
+      class="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:rounded focus:bg-white focus:px-3 focus:py-2"
+    >
+      Sari la conținut
+    </a>
+
+    <header class="border-b border-line bg-white">
+      <div class="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3">
+        <a href="/" class="flex items-center gap-2 font-bold text-brand no-underline hover:no-underline">
+          <img src="/favicon.svg" alt="" width="28" height="28" />
+          <span class="text-lg tracking-tight">{SITE.name}</span>
+        </a>
+        <nav aria-label="Navigare principală">
+          <ul class="flex gap-5 text-sm font-medium">
+            {
+              NAV.map((item) => (
+                <li>
+                  <a
+                    href={item.href}
+                    class:list={[
+                      'text-ink no-underline hover:text-accent',
+                      path.startsWith(item.href) && 'text-accent',
+                    ]}
+                    aria-current={path.startsWith(item.href) ? 'page' : undefined}
+                  >
+                    {item.label}
+                  </a>
+                </li>
+              ))
+            }
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+    <main id="continut" class="flex-1">
+      <slot />
+    </main>
+
+    <footer class="mt-16 border-t border-line bg-snow text-sm text-muted">
+      <div class="mx-auto grid max-w-6xl gap-6 px-4 py-8 sm:grid-cols-[1fr_auto]">
+        <div class="space-y-2">
+          <p class="font-semibold text-ink">{SITE.name}</p>
+          <p>{SITE.tagline}.</p>
+          <p>
+            Hărțile folosesc date © <a href="https://www.openstreetmap.org/copyright">contribuitorii OpenStreetMap</a>.
+            Toate sursele sunt pe pagina <a href="/despre/date/">Surse și atribuiri</a>.
+          </p>
+          <p>Unele linkuri sunt de afiliere. <a href="/afiliere/">Cum funcționează</a>.</p>
+        </div>
+        <nav aria-label="Linkuri utile">
+          <ul class="grid grid-cols-2 gap-x-6 gap-y-1 sm:grid-cols-1">
+            {FOOTER_LINKS.map((l) => <li><a href={l.href} class="text-muted">{l.label}</a></li>)}
+          </ul>
+        </nav>
+      </div>
+      <p class="mx-auto max-w-6xl px-4 pb-6">© {year} {SITE.name}</p>
+    </footer>
+  </body>
+</html>

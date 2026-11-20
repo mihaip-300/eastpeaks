@@ -74,7 +74,7 @@ pipeline/             resorts.yaml, src/, tests/, Makefile
 - **Datele lipsă nu opresc build-ul.** O pagină fără date editoriale afișează „în curând” și scrie un avertisment în log.
 - **Fără bază de date pentru conținut.** D1 se folosește doar pentru click-urile de afiliere.
 - **JavaScript doar în insule.** Nu adăuga React, Next.js, Mapbox, Google Maps, GA4 sau jQuery.
-- **Afilierea trece doar prin `AffiliateLink`** → `/go/{partner}/{target}?from={slug}`, cu `rel="sponsored nofollow noopener"`. Niciun URL de afiliere direct în conținut. `/go/` acceptă doar combinații partener/țintă din `src/data/partners.ts`, ca să nu devină open redirect. Parametrul `from` se acceptă doar dacă e un slug cunoscut (altfel se ignoră).
+- **Afilierea trece doar prin `AffiliateLink`** → `/go/{partner}/{target}/?from={slug}` (cu slash final, altfel `trailingSlash: 'always'` adaugă un 301), cu `rel="sponsored nofollow noopener"`. Niciun URL de afiliere direct în conținut. `/go/` acceptă doar combinații partener/țintă din `src/data/partners.ts`, ca să nu devină open redirect. Parametrul `from` se acceptă doar dacă e un slug cunoscut (altfel se ignoră).
 - **Atribuirile rămân vizibile** pe hartă și pe `/despre/date`: OSM/ODbL, OpenFreeMap, Copernicus DEM (cu textul exact din HANDOFF 5.4), ESA WorldCover, sursa de relief. Datele de pârtii derivate din OSM se oferă sub ODbL (HANDOFF 5.4).
 - **Fără date personale în D1:** nu salva IP-uri.
 - **Secretele** și ID-urile de afiliere stau în `.dev.vars` sau `wrangler secret`, niciodată în Git.

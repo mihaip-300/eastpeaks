@@ -1,0 +1,25 @@
+---
+import Prose from '../../layouts/Prose.astro';
+import { SITE } from '../../data/site';
+---
+
+<Prose
+  title="Despre"
+  description={`Ce este ${SITE.name}, de unde vin datele și cum se finanțează site-ul.`}
+>
+  <p>
+    {SITE.name} compară stațiunile de schi din România, Balcani și Austria pe date, ca să alegi mai ușor unde
+    mergi: cât de lungi și de abrupte sunt pârtiile, cât costă skipass-ul și cât faci cu mașina până acolo.
+  </p>
+  <h2>De unde vin datele</h2>
+  <p>
+    Pârtiile și lifturile vin din OpenStreetMap, prin OpenSkiMap. Pantele le calculăm noi, dintr-un model digital
+    al terenului. Prețurile le luăm de pe site-urile oficiale ale stațiunilor și le verificăm înainte de fiecare
+    sezon. Lista completă a surselor este pe pagina <a href="/despre/date/">Surse și atribuiri</a>.
+  </p>
+  <h2>Cum se finanțează site-ul</h2>
+  <p>
+    Unele linkuri spre cazări, închirieri și transferuri sunt de afiliere: dacă rezervi prin ele, primim un
+    comision, fără cost în plus pentru tine. Detalii pe pagina <a href="/afiliere/">Afiliere</a>.
+  </p>
+</Prose>

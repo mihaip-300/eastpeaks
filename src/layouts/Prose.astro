@@ -1,0 +1,18 @@
+---
+import Base from './Base.astro';
+
+interface Props {
+  title: string;
+  description: string;
+  noindex?: boolean;
+}
+
+const props = Astro.props;
+---
+
+<Base {...props}>
+  <article class="prose-ro mx-auto px-4 py-10">
+    <h1>{props.title}</h1>
+    <slot />
+  </article>
+</Base>

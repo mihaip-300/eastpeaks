@@ -1,0 +1,58 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+
+  /* Working brand palette (neutral until Mike picks a brand colour). */
+  --color-ink: #13212e;
+  --color-muted: #5a6875;
+  --color-line: #dfe5ea;
+  --color-snow: #f6f8fa;
+  --color-brand: #123047;
+  --color-brand-soft: #e3edf5;
+  --color-accent: #1e6fd9;
+
+  /* European piste colours, see CLAUDE.md. */
+  --color-piste-novice: #2e9e44;
+  --color-piste-easy: #1e6fd9;
+  --color-piste-intermediate: #d62b2b;
+  --color-piste-advanced: #1a1a1a;
+  --color-piste-expert: #1a1a1a;
+  --color-piste-freeride: #f08c00;
+  --color-piste-unknown: #8a8a8a;
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+  body {
+    @apply bg-white text-ink antialiased;
+  }
+  a {
+    @apply text-accent underline-offset-2 hover:underline;
+  }
+}
+
+/* Long-form text pages (legal, about, sources) without a typography plugin. */
+@layer components {
+  .prose-ro {
+    @apply max-w-prose leading-relaxed;
+  }
+  .prose-ro h1 {
+    @apply mb-4 text-3xl font-bold tracking-tight;
+  }
+  .prose-ro h2 {
+    @apply mt-8 mb-3 text-xl font-semibold;
+  }
+  .prose-ro p,
+  .prose-ro ul {
+    @apply mb-4;
+  }
+  .prose-ro ul {
+    @apply list-disc pl-6;
+  }
+  .prose-ro li {
+    @apply mb-1;
+  }
+}

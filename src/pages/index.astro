@@ -1,0 +1,48 @@
+---
+import Base from '../layouts/Base.astro';
+import { SITE } from '../data/site';
+
+// Placeholder list until M0 step D wires in data/generated + editorial content.
+const upcoming = [
+  { name: 'Poiana Brașov', country: 'România' },
+  { name: 'Bansko', country: 'Bulgaria' },
+];
+---
+
+<Base
+  title={SITE.name}
+  description="Hărți ale pârtiilor, prețuri la skipass, distanțe cu mașina și un calculator de cost pentru stațiunile de schi din România, Balcani și Austria."
+>
+  <section class="bg-brand text-white">
+    <div class="mx-auto max-w-6xl px-4 py-14 sm:py-20">
+      <h1 class="max-w-3xl text-3xl font-bold tracking-tight text-balance sm:text-5xl">
+        Unde mergi la schi iarna asta?
+      </h1>
+      <p class="mt-4 max-w-2xl text-lg text-brand-soft">
+        Comparăm stațiunile din România, Balcani și Austria pe date: kilometri de pârtie, pante,
+        prețul skipass-ului și cât faci cu mașina din București, Cluj sau Brașov.
+      </p>
+      <a
+        href="/statiuni/"
+        class="mt-8 inline-block rounded-lg bg-white px-5 py-3 font-semibold text-brand no-underline hover:bg-brand-soft hover:no-underline"
+      >
+        Vezi stațiunile
+      </a>
+    </div>
+  </section>
+
+  <section class="mx-auto max-w-6xl px-4 py-12">
+    <h2 class="text-xl font-semibold">Primele stațiuni</h2>
+    <p class="mt-1 text-muted">Paginile cu hartă și calculator apar în curând.</p>
+    <ul class="mt-6 grid gap-4 sm:grid-cols-2">
+      {
+        upcoming.map((r) => (
+          <li class="rounded-xl border border-line p-5">
+            <p class="text-lg font-semibold">{r.name}</p>
+            <p class="text-sm text-muted">{r.country} · în curând</p>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+</Base>

@@ -364,13 +364,13 @@ ID-urile de afiliat vin din variabile de mediu. Până la aprobarea în rețele,
 
 ### 8.4 Componenta
 
-`<AffiliateLink partner="booking" target="bansko" from={slug}>Vezi cazări în Bansko</AffiliateLink>` generează `<a href="/go/booking/bansko?from=…" rel="sponsored nofollow noopener" target="_blank">`. Fiecare pagină cu afiliere afișează o notă scurtă cu link spre `/afiliere/`.
+`<AffiliateLink partner="booking" target="bansko" from={slug}>Vezi cazări în Bansko</AffiliateLink>` generează `<a href="/go/booking/bansko/?from=…" rel="sponsored nofollow noopener" target="_blank">`. Fiecare pagină cu afiliere afișează o notă scurtă cu link spre `/afiliere/`.
 
 ---
 
 ## 9. Deploy și configurare Cloudflare
 
-- **`wrangler.jsonc`**: nume, `compatibility_date`, `assets.directory: "./dist"`, binding D1 `DB`, variabilele publice. Folosește configul pe care îl generează adapterul `@astrojs/cloudflare` și verifică-l în documentația curentă: adapterul poate scrie HTML-ul static într-un subdirector (de exemplu `dist/client`). `assets.directory` și indexarea Pagefind trebuie să folosească directorul real.
+- **`wrangler.jsonc`**: nume, `compatibility_date`, `assets.directory: "./dist/client"`, binding D1 `DB`, variabilele publice. Adapterul v14 scrie HTML-ul static în `dist/client/` și generează configul final în `dist/server/wrangler.json`, pe care `wrangler deploy` îl folosește automat (prin `.wrangler/deploy/config.json`). Pagefind indexează `dist/client/`.
 - **R2:** bucketul `pistes`, legat de subdomeniul `tiles.eastpeaks.eu`.
   - CORS: `GET`, `HEAD`, headerul `Range`, originile site-ului.
   - Regulă de cache „Cache Everything”, cu TTL lung pe edge (fișierele sunt versionate prin nume).
