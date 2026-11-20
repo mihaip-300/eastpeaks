@@ -1,0 +1,39 @@
+---
+// Map-first explorer for all resorts (brief: "Interactive map page").
+import { PUBLIC_PMTILES_URL } from 'astro:env/client';
+import MapExplorer, { type ExplorerResort } from '../components/map/MapExplorer';
+import Base from '../layouts/Base.astro';
+import { getResorts } from '../lib/resorts';
+import { seasonLabel } from '../lib/season';
+
+const resorts = await getResorts();
+const data: ExplorerResort[] = resorts.map((r) => ({
+  slug: r.slug,
+  name: r.name,
+  url: r.url,
+  place: [r.editorial?.region, r.country.name].filter(Boolean).join(' · '),
+  season: seasonLabel(r.editorial?.season),
+  bbox: r.generated.bbox,
+  km: r.generated.runs.km_total,
+  runs: r.generated.runs.count,
+  lifts: r.generated.lifts.count,
+  elevMin: r.generated.elevation_m.min,
+  elevMax: r.generated.elevation_m.max,
+  kmByDifficulty: r.generated.runs.km_by_difficulty,
+  steepest: r.generated.steepest_runs,
+}));
+---
+
+<Base
+  title="Harta pârtiilor"
+  description="Harta interactivă a pârtiilor din Poiana Brașov și Bansko: dificultate, lungime, diferență de nivel și pantă pentru fiecare pârtie, cu teren 3D."
+>
+  <h1 class="sr-only">Harta pârtiilor</h1>
+  <MapExplorer client:load resorts={data} pmtilesUrl={PUBLIC_PMTILES_URL} />
+  <noscript>
+    <div class="container-site section">
+      <p class="text-lead">Harta interactivă are nevoie de JavaScript. Hărțile statice sunt pe paginile stațiunilor:</p>
+      <ul class="mt-4 space-y-2">{resorts.map((r) => <li><a href={`${r.url}#harta`}>{r.name}</a></li>)}</ul>
+    </div>
+  </noscript>
+</Base>

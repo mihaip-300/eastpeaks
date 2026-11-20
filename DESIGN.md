@@ -79,6 +79,8 @@ Până există fotografii reale, eroii sunt **randări ale reliefului real** al 
 
 - **Acasă:** hero împărțit pe diagonală (Poiana | Bansko), „Doi munți. Un sezon întreg.”, alegerea stațiunii, bandă de comparație (închis), teaser pentru hărți (navy), „De unde vin cifrele”.
 - **Stațiune:** hero cu 4 cifre „dintr-o privire” pe sticlă, bară de taburi lipicioasă (secțiuni pe aceeași pagină, active la scroll, cu comutatorul de stațiune), Prezentare · Condiții · Pârtii · Hartă · Cazare · Închirieri · Cum ajungi · Costuri · FAQ (generat din date).
+- **Hartă (`/harta/`):** harta ~2/3, panou negru în dreapta (comutator de stațiune cu zbor animat, cifre, cele mai abrupte pârtii, straturi: dificultate, lifturi, 3D); pârtia aleasă strălucește auriu. Pe telefon: hartă pe tot ecranul + bottom sheet. `?statiune=` păstrează stațiunea în link.
+- **Condiții (`/conditii/`):** zăpadă, instalații, vreme, webcam: „în curând” cu link spre raportul oficial până avem o sursă de date reală.
 - Taburile cerute în brief sunt secțiuni ancorate, nu panouri ascunse: tot conținutul rămâne vizibil pentru căutare și pentru citit pe sărite. Insula `Tabs` rămâne pentru locurile unde panourile chiar trebuie ascunse.
 
 ## Mișcare

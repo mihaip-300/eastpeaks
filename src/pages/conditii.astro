@@ -1,0 +1,53 @@
+---
+// Conditions hub. Real data only: until a reliable source exists, each block says
+// "în curând" and links to the resort's own report (DESIGN.md: no invented numbers).
+import SectionHeading from '../components/ui/SectionHeading.astro';
+import LiveConditions from '../components/ui/LiveConditions.astro';
+import Base from '../layouts/Base.astro';
+import { getResorts } from '../lib/resorts';
+
+const resorts = (await getResorts()).filter((r) => r.editorial);
+const official = (r: (typeof resorts)[number]) => r.editorial?.conditions_url;
+---
+
+<Base title="Condiții: zăpadă, instalații, vreme" description="Starea pârtiilor și a instalațiilor, zăpada, vremea și camerele web pentru Poiana Brașov și Bansko.">
+  <div class="container-site section">
+    <SectionHeading kicker="Condiții" title="Zăpadă, instalații, vreme.">
+      Vrem să arătăm aici date live de încredere. Până când avem o sursă sigură, fiecare stațiune are link spre raportul
+      ei oficial, unde datele sunt actualizate zilnic.
+    </SectionHeading>
+  </div>
+
+  <section id="zapada" class="container-site space-y-4 pb-16" aria-label="Zăpadă și instalații">
+    <span id="instalatii" class="block -translate-y-24" aria-hidden="true"></span>
+    {resorts.map((r) => <LiveConditions resortName={r.name} officialUrl={official(r)} />)}
+  </section>
+
+  <section class="on-dark section bg-midnight text-ivory" aria-label="Vreme și camere web">
+    <div class="container-site grid gap-14 lg:grid-cols-2">
+      <div id="vreme">
+        <SectionHeading kicker="Vreme" title="Prognoza, în curând." tone="dark">
+          Pregătim prognoza pe vale și pe vârf pentru fiecare stațiune. Până atunci, verifică prognoza pe site-ul
+          stațiunii înainte de plecare.
+        </SectionHeading>
+      </div>
+      <div id="webcam">
+        <SectionHeading kicker="Webcam" title="Camerele web." tone="dark">
+          Camerele live sunt pe site-urile oficiale ale stațiunilor.
+        </SectionHeading>
+        <ul class="mt-8 divide-y divide-gold/20 border-y border-gold/20">
+          {
+            resorts.map((r) => (
+              <li>
+                <a href={official(r)} rel="noopener" target="_blank" class="flex items-center justify-between py-4 text-ivory no-underline hover:text-gold-soft">
+                  <span class="font-display text-2xl">{r.name}</span>
+                  <span class="label">Site oficial ↗</span>
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </div>
+  </section>
+</Base>

@@ -160,7 +160,7 @@ const compare: Row[] = [
       <div class="grid grid-cols-2 gap-3" data-reveal>
         {
           [left, right].map((r) => (
-            <a href={`${r.url}#harta`} class="group relative block overflow-hidden rounded-lg no-underline">
+            <a href={`/harta/?statiune=${r.slug}`} class="group relative block overflow-hidden rounded-lg no-underline">
               <img src={`/maps/${r.slug}.webp`} alt={`Harta pârtiilor din ${r.name}`} width="800" height="500" loading="lazy" decoding="async" class="aspect-[4/5] w-full object-cover opacity-90 transition-opacity group-hover:opacity-100" />
               <span class="glass absolute inset-x-3 bottom-3 rounded-sm px-3 py-2 text-sm text-ivory">
                 {r.name} <span aria-hidden="true">→</span>
